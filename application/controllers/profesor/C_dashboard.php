@@ -11,8 +11,11 @@ class C_dashboard extends CI_Controller
             show_error('No tienes permisos', 403);
         }
     }
-    public function index()
+      public function index()
     {
-        $this->load->view('profesor/V_dashboard');
+        $this->load->view('includes/header');
+		$this->load->view('includes/sidebarP');
+		$this->load->view('home');
+		$this->load->view('includes/footer');
     }
 }

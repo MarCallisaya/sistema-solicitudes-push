@@ -64,6 +64,8 @@ class C_login extends CI_Controller
                 'id_usuario' => $user->id_usuario,
                 'rol_id'     => $user->rol_id,
                 'nombre'     => $user->nombre,
+                'apellido_paterno' => $user->apellido_paterno,
+                'apellido_materno' => $user->apellido_materno,
                 'username'   => $user->username,
                 'logged_in'  => true
             );
@@ -89,6 +91,7 @@ class C_login extends CI_Controller
             $this->session->set_flashdata('error', 'Usuario o contraseña incorrectos');
             redirect('C_login');
         }
+        
     }
 
     public function logout()

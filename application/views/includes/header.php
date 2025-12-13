@@ -15,10 +15,6 @@
 </head>
 
 <body>
-
-    <!--*******************
-        Preloader start
-    ********************-->
     <div id="preloader">
         <div class="sk-three-bounce">
             <div class="sk-child sk-bounce1"></div>
@@ -26,23 +22,13 @@
             <div class="sk-child sk-bounce3"></div>
         </div>
     </div>
-    <!--*******************
-        Preloader end
-    ********************-->
 
-
-    <!--**********************************
-        Main wrapper start
-    ***********************************-->
     <div id="main-wrapper">
 
-        <!--**********************************
-            Nav header start
-        ***********************************-->
         <div class="nav-header">
             <a href="index.html" class="brand-logo">
-                <span>UE. KASANI</span> <br>
-                <span>_Director</span>
+                <span>  UE. KASANI  </span> 
+                
 
             </a>
 
@@ -52,13 +38,7 @@
                 </div>
             </div>
         </div>
-        <!--**********************************
-            Nav header end
-        ***********************************-->
 
-        <!--**********************************
-            Header start
-        ***********************************-->
         <div class="header">
             <div class="header-content">
                 <nav class="navbar navbar-expand">
@@ -66,13 +46,12 @@
                         <div class="header-left">
                             <div class="search_bar dropdown">
 
-
                             </div>
                         </div>
 
                         <ul class="navbar-nav header-right">
                             <li class="nav-item dropdown notification_dropdown">
-                                <p> <?= $this->session->userdata('nombre'); ?></p>
+                                <p> Bienvenido: <?= $this->session->userdata('nombre'); ?></p>
                             </li>
 
                             <li class="nav-item dropdown header-profile">
