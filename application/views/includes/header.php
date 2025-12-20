@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Unidad Educativa Kasani </title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
+
     <link rel="stylesheet" href="<?= base_url('assets/vendor/owl-carousel/css/owl.carousel.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/owl-carousel/css/owl.theme.default.min.css'); ?>">
     <link href="<?= base_url('assets/vendor/jqvmap/css/jqvmap.min.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('assets/css/style.css'); ?>" rel="stylesheet">
+    
      <!-- Datatable -->
     <link href="<?= base_url('assets/vendor/datatables/css/jquery.dataTables.min.css'); ?>" rel="stylesheet">
+    <link href="<?= base_url('assets/css/style.css'); ?>" rel="stylesheet">
   
 
 </head>
@@ -35,12 +36,12 @@
                 
 
             </a>
-
+            <!-- 
             <div class="nav-control">
                 <div class="hamburger">
                     <span class="line"></span><span class="line"></span><span class="line"></span>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="header">
