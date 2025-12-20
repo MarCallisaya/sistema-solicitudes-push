@@ -12,8 +12,10 @@
     <link rel="stylesheet" href="<?= base_url('assets/vendor/owl-carousel/css/owl.theme.default.min.css'); ?>">
     <link href="<?= base_url('assets/vendor/jqvmap/css/jqvmap.min.css'); ?>" rel="stylesheet">
     
-     <!-- Datatable -->
+    <!-- Datatable -->
     <link href="<?= base_url('assets/vendor/datatables/css/jquery.dataTables.min.css'); ?>" rel="stylesheet">
+    <!-- Sweetalert -->
+    <link href="<?= base_url('assets/vendor/sweetalert2/dist/sweetalert2.min.css'); ?>" rel="stylesheet">
     <link href="<?= base_url('assets/css/style.css'); ?>" rel="stylesheet">
   
 

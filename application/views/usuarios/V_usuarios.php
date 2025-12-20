@@ -207,33 +207,54 @@
     }
 
     $('#formUsuario').on('submit', function (e) {
-        e.preventDefault(); // 🚫 evita recarga
-
-        console.log('Enviando formulario...');
+        e.preventDefault(); 
 
         $.ajax({
             url: '<?= base_url("usuarios/C_usuarios/guardar"); ?>',
             type: 'POST',
             data: $(this).serialize(),
             dataType: 'json',
+
             success: function (resp) {
+
                 if (resp.status) {
-                    alert('Usuario registrado correctamente');
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registro exitoso',
+                        text: 'El usuario fue registrado correctamente',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
 
                     $('#modalUsuario').modal('hide');
                     $('#formUsuario')[0].reset();
 
-                    $('#datatable_usu').DataTable().ajax.reload();
+                    $('#datatable_usu').DataTable().ajax.reload(null, false);
+
                 } else {
-                    alert(resp.msg);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: resp.msg || 'No se pudo registrar'
+                    });
                 }
             },
             error: function () {
-                alert('Error al guardar usuario');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error de servidor'
+                });
             }
         });
     });
 
 })();
 </script>
+
+
+
+
 

@@ -26,6 +26,11 @@
 <script src="<?= base_url('assets/vendor/datatables/js/jquery.dataTables.min.js'); ?>"></script>
 <script src="<?= base_url('assets/js/plugins-init/datatables.init.js'); ?>"></script> <!-- no se si es conveniente eliminarlo-->
 
+<!-- Sweetalert -->
+<script src="<?= base_url('assets/vendor/sweetalert2/dist/sweetalert2.min.js'); ?>"></script>
+<script src="<?= base_url('assets/js/plugins-init/sweetalert.init.js'); ?>"></script>
+
+<!-- ----------------------------------- -->
 
 <!-- Vectormap -->
 <script src="<?= base_url('assets/vendor/raphael/raphael.min.js'); ?>"></script>
