@@ -41,8 +41,12 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form id="formUsuario">
+
+                <input type="hidden" name="id_usuario" id="id_usuario" value="">
+
                 <div class="modal-header">
-                    <h5 class="modal-title">Registrar Usuario</h5>
+                    <h5 class="modal-title" id="modalUsuarioTitle">Registrar Usuario</h5>
+
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
@@ -52,41 +56,41 @@
                         <!-- Nombre -->
                         <div class="col-md-4">
                             <label>Nombre</label>
-                            <input type="text" name="nombre" class="form-control" required>
+                            <input type="text" name="nombre" id="nombre" class="form-control" required>
                         </div>
 
                         <div class="col-md-4">
                             <label>Apellido Paterno</label>
-                            <input type="text" name="apellido_paterno" class="form-control">
+                            <input type="text" name="apellido_paterno" id="apellido_paterno" class="form-control">
                         </div>
 
                         <div class="col-md-4">
                             <label>Apellido Materno</label>
-                            <input type="text" name="apellido_materno" class="form-control">
+                            <input type="text" name="apellido_materno" id="apellido_materno" class="form-control">
                         </div>
 
                         <!-- CI -->
                         <div class="col-md-4 mt-2">
                             <label>CI</label>
-                            <input type="text" name="ci" class="form-control">
+                            <input type="text" name="ci" id="ci" class="form-control">
                         </div>
 
                         <!-- Teléfono -->
                         <div class="col-md-4 mt-2">
                             <label>Teléfono</label>
-                            <input type="text" name="telefono" class="form-control">
+                            <input type="text" name="telefono" id="telefono" class="form-control">
                         </div>
 
                         <!-- Email -->
                         <div class="col-md-4 mt-2">
                             <label>Email</label>
-                            <input type="email" name="email" class="form-control">
+                            <input type="email" name="email" id="email" class="form-control">
                         </div>
 
                         <!-- Rol -->
                         <div class="col-md-6 mt-2">
                             <label>Rol</label>
-                            <select name="rol_id" class="form-control" required>
+                            <select name="rol_id" id="rol_id" class="form-control" required>
                                 <option value="">Seleccione</option>
                                 <?php foreach ($roles as $r): ?>
                                     <option value="<?= $r->id_rol ?>">
@@ -99,7 +103,7 @@
                         <!-- Unidad Educativa -->
                         <div class="col-md-6 mt-2">
                             <label>Unidad Educativa</label>
-                            <select name="unidad_educativa_id" class="form-control" required>
+                            <select name="unidad_educativa_id" id="unidad_educativa_id" class="form-control" required>
                                 <option value="">Seleccione</option>
                                 <?php foreach ($unidades as $u): ?>
                                     <option value="<?= $u->id_unidad_educativa ?>">
@@ -112,19 +116,19 @@
                         <!-- Usuario -->
                         <div class="col-md-6 mt-2">
                             <label>Usuario</label>
-                            <input type="text" name="username" class="form-control" required>
+                            <input type="text" name="username" id="username" class="form-control" required>
                         </div>
 
                         <!-- Password -->
                         <div class="col-md-6 mt-2">
                             <label>Contraseña</label>
-                            <input type="password" name="password" class="form-control" required>
+                            <input type="password" name="password" id="password" class="form-control" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" id="btnUsuarioSubmit" class="btn btn-success">
                         Guardar
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -135,6 +139,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 
 <script>
@@ -179,18 +186,17 @@
                 },
                 {
                     data: 'id_usuario',
-                    render: function() {
+                    render: function(data) {
                         return `
                         <div class="btn-group">
-                            <button class="btn btn-sm btn-warning me-1">
+                            <button type="button" class="btn btn-sm btn-warning btn-edit-usu" data-id="${data}">
                                 <i class="fa fa-pencil"></i>
                             </button>
-                            <button class="btn btn-sm btn-danger">
+                            <button type="button" class="btn btn-sm btn-danger btn-del-usu" data-id="${data}">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </div>
-                        
-                    `;
+                        `;
                     }
                 }
             ]
@@ -200,61 +206,146 @@
 </script>
 
 <script>
-(function initGuardarUsuario() {
+    (function initGuardarUsuarioUnico() {
 
-    if (!window.jQuery) {
-        return setTimeout(initGuardarUsuario, 50);
-    }
+        if (!window.jQuery) return setTimeout(initGuardarUsuarioUnico, 50);
 
-    $('#formUsuario').on('submit', function (e) {
-        e.preventDefault(); 
+        $('#formUsuario').on('submit', function(e) {
+            e.preventDefault();
 
-        $.ajax({
-            url: '<?= base_url("usuarios/C_usuarios/guardar"); ?>',
-            type: 'POST',
-            data: $(this).serialize(),
-            dataType: 'json',
+            const id = $('#id_usuario').val();
+            const esEditar = (id && id !== '');
 
-            success: function (resp) {
+            const url = esEditar ?
+                '<?= base_url("usuarios/C_usuarios/actualizar"); ?>' :
+                '<?= base_url("usuarios/C_usuarios/guardar"); ?>';
 
-                if (resp.status) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp.status) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: esEditar ? 'Actualización exitosa' : 'Registro exitoso',
+                            text: esEditar ? 'El usuario fue actualizado correctamente' : 'El usuario fue registrado correctamente',
+                            timer: 1800,
+                            showConfirmButton: false
+                        });
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Registro exitoso',
-                        text: 'El usuario fue registrado correctamente',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
+                        $('#modalUsuario').modal('hide');
+                        $('#formUsuario')[0].reset();
+                        $('#id_usuario').val('');
 
-                    $('#modalUsuario').modal('hide');
-                    $('#formUsuario')[0].reset();
+                        // por si quedó como no requerido
+                        $('#password').prop('required', true);
 
-                    $('#datatable_usu').DataTable().ajax.reload(null, false);
-
-                } else {
-
+                        $('#datatable_usu').DataTable().ajax.reload(null, false);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: resp.msg || (esEditar ? 'No se pudo actualizar' : 'No se pudo registrar')
+                        });
+                    }
+                },
+                error: function() {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: resp.msg || 'No se pudo registrar'
+                        text: 'Error de servidor'
                     });
                 }
-            },
-            error: function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error de servidor'
-                });
-            }
+            });
         });
-    });
 
-})();
+    })();
 </script>
 
 
+<script>
+    (function initModalUsuarioModo() {
 
+        if (!window.jQuery) return setTimeout(initModalUsuarioModo, 50);
 
+        // Cuando abres el modal para registrar (botón Nuevo Usuario)
+        $('[data-target="#modalUsuario"]').on('click', function() {
+            $('#modalUsuarioTitle').text('Registrar Usuario');
+            $('#btnUsuarioSubmit').text('Guardar');
 
+            $('#id_usuario').val(''); // vacío = registrar
+            $('#formUsuario')[0].reset();
+
+            // password obligatorio en registrar
+            $('#password').prop('required', true);
+        });
+
+    })();
+</script>
+
+<script>
+    (function initEditarMismoModal() {
+
+        if (!window.jQuery) return setTimeout(initEditarMismoModal, 50);
+
+        $(document).on('click', '.btn-edit-usu', function() {
+            const id = $(this).data('id');
+
+            $.ajax({
+                url: '<?= base_url("usuarios/C_usuarios/obtener_usuario"); ?>',
+                type: 'GET',
+                data: {
+                    id_usuario: id
+                },
+                dataType: 'json',
+                success: function(resp) {
+                    if (!resp.status) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: resp.msg || 'No se pudo obtener el usuario'
+                        });
+                        return;
+                    }
+
+                    const u = resp.data;
+
+                    // Cambiar modal a modo editar
+                    $('#modalUsuarioTitle').text('Editar Usuario');
+                    $('#btnUsuarioSubmit').text('Actualizar');
+
+                    // Guardar id para que el submit sepa que es editar
+                    $('#id_usuario').val(u.id_usuario);
+
+                    // Llenar inputs
+                    $('#nombre').val(u.nombre);
+                    $('#apellido_paterno').val(u.apellido_paterno);
+                    $('#apellido_materno').val(u.apellido_materno);
+                    $('#ci').val(u.ci);
+                    $('#telefono').val(u.telefono);
+                    $('#email').val(u.email);
+                    $('#rol_id').val(u.rol_id);
+                    $('#unidad_educativa_id').val(u.unidad_educativa_id);
+                    $('#username').val(u.username);
+
+                    // contraseña NO obligatoria en editar
+                    $('#password').val('');
+                    $('#password').prop('required', false);
+
+                    // abrir modal
+                    $('#modalUsuario').modal('show');
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error de servidor'
+                    });
+                }
+            });
+        });
+
+    })();
+</script>
