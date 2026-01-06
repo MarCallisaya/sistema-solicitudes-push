@@ -108,4 +108,29 @@ class C_usuarios extends CI_Controller
             echo json_encode(['status' => false, 'msg' => 'No se pudo actualizar']);
         }
     }
+
+    public function eliminar()
+    {
+        $id_usuario = $this->input->post('id_usuario');
+
+        if (!$id_usuario) {
+            echo json_encode(['status' => false, 'msg' => 'No llegó el ID']);
+            return;
+        }
+
+        $ok = $this->M_usuarios->soft_delete_usuario($id_usuario);
+
+        // Mostrar error real de BD si hubiera
+        $err = $this->db->error();
+        if (!empty($err['code'])) {
+            echo json_encode(['status' => false, 'msg' => $err['message']]);
+            return;
+        }
+
+        if ($ok) {
+            echo json_encode(['status' => true]);
+        } else {
+            echo json_encode(['status' => false, 'msg' => 'No se pudo desactivar']);
+        }
+    }
 }

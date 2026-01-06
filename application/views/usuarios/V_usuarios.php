@@ -141,9 +141,6 @@
 </div>
 
 
-
-
-
 <script>
     console.log('JS USUARIOS CARGADO');
 
@@ -203,9 +200,8 @@
         });
 
     })();
-</script>
 
-<script>
+    // GUARDAR
     (function initGuardarUsuarioUnico() {
 
         if (!window.jQuery) return setTimeout(initGuardarUsuarioUnico, 50);
@@ -238,10 +234,7 @@
                         $('#modalUsuario').modal('hide');
                         $('#formUsuario')[0].reset();
                         $('#id_usuario').val('');
-
-                        // por si quedó como no requerido
                         $('#password').prop('required', true);
-
                         $('#datatable_usu').DataTable().ajax.reload(null, false);
                     } else {
                         Swal.fire({
@@ -262,30 +255,25 @@
         });
 
     })();
-</script>
 
 
-<script>
+
+
+    // MODAL USUARIO - (botón Nuevo Usuario)
     (function initModalUsuarioModo() {
 
         if (!window.jQuery) return setTimeout(initModalUsuarioModo, 50);
-
-        // Cuando abres el modal para registrar (botón Nuevo Usuario)
         $('[data-target="#modalUsuario"]').on('click', function() {
             $('#modalUsuarioTitle').text('Registrar Usuario');
             $('#btnUsuarioSubmit').text('Guardar');
-
-            $('#id_usuario').val(''); // vacío = registrar
+            $('#id_usuario').val('');
             $('#formUsuario')[0].reset();
-
-            // password obligatorio en registrar
             $('#password').prop('required', true);
         });
 
     })();
-</script>
 
-<script>
+    // EDITAR
     (function initEditarMismoModal() {
 
         if (!window.jQuery) return setTimeout(initEditarMismoModal, 50);
@@ -311,15 +299,10 @@
                     }
 
                     const u = resp.data;
-
-                    // Cambiar modal a modo editar
                     $('#modalUsuarioTitle').text('Editar Usuario');
                     $('#btnUsuarioSubmit').text('Actualizar');
-
-                    // Guardar id para que el submit sepa que es editar
                     $('#id_usuario').val(u.id_usuario);
 
-                    // Llenar inputs
                     $('#nombre').val(u.nombre);
                     $('#apellido_paterno').val(u.apellido_paterno);
                     $('#apellido_materno').val(u.apellido_materno);
@@ -330,11 +313,9 @@
                     $('#unidad_educativa_id').val(u.unidad_educativa_id);
                     $('#username').val(u.username);
 
-                    // contraseña NO obligatoria en editar
                     $('#password').val('');
                     $('#password').prop('required', false);
 
-                    // abrir modal
                     $('#modalUsuario').modal('show');
                 },
                 error: function() {
@@ -345,6 +326,77 @@
                     });
                 }
             });
+        });
+
+    })();
+
+
+    // ELIMINAR
+    (function initEliminarUsuario() {
+        if (!window.jQuery) {
+            return setTimeout(initEliminarUsuario, 50);
+        }
+
+        console.log('JS ELIMINAR LISTO');
+        $(document).off('click', '.btn-del-usu'); 
+        $(document).on('click', '.btn-del-usu', function() {
+
+            const id = $(this).data('id');
+            console.log('CLICK ELIMINAR ID =', id);
+
+            Swal.fire({
+                title: '¿Desactivar usuario?',
+                text: 'El usuario quedará desactivado (no se borra).',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, desactivar',
+                cancelButtonText: 'Cancelar'
+            }).then(function(result) {
+
+                const confirmed = (result.isConfirmed === true) || (result.value === true);
+
+                if (!confirmed) return;
+
+                $.ajax({
+                    url: '<?= base_url("usuarios/C_usuarios/eliminar"); ?>',
+                    type: 'POST',
+                    data: {
+                        id_usuario: id
+                    },
+                    dataType: 'json',
+                    success: function(resp) {
+                        console.log('RESPUESTA ELIMINAR =', resp);
+
+                        if (resp.status) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Desactivado',
+                                text: 'Usuario desactivado correctamente',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+
+                            $('#datatable_usu').DataTable().ajax.reload(null, false);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: resp.msg || 'No se pudo desactivar'
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log('ERROR AJAX =', xhr.responseText);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error de servidor'
+                        });
+                    }
+                });
+
+            });
+
         });
 
     })();

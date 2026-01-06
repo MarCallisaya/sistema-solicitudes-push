@@ -105,4 +105,22 @@ class M_usuarios extends CI_Model
             'activo' => true
         ]);
     }
+
+    public function soft_delete_usuario($id_usuario)
+    {
+        $this->db->trans_start();
+
+        // 1) Desactivar usuario
+        $this->db->where('id_usuario', $id_usuario);
+        $this->db->update('usuario', ['activo' => false]);
+
+        // 2) Desactivar asignaciones activas (para que ya no aparezca en listados)
+        $this->db->where('usuario_id', $id_usuario);
+        $this->db->where('activo', true);
+        $this->db->update('asignacion', ['activo' => false]);
+
+        $this->db->trans_complete();
+
+        return $this->db->trans_status();
+    }
 }

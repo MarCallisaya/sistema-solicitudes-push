@@ -38,8 +38,12 @@
                     <span class="nav-text">Usuarios</span>
                 </a>
             </li>
-            <li><a href="widget-basic.html" aria-expanded="false"><i class="icon icon-app-store"></i><span
-                         class="nav-text">Unidades Educativas</span></a></li>
+            <li>
+                <a href="<?= site_url('ue/C_ue'); ?>" aria-expanded="false">
+                    <i class="icon icon-app-store"></i>
+                    <span class="nav-text">Unidades Educativas</span>
+                </a>
+            </li>
             <li><a href="widget-basic.html" aria-expanded="false"><i class="icon icon-chart-bar-33"></i><span
                          class="nav-text">Metricas</span></a></li>
          </ul>
