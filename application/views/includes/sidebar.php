@@ -39,7 +39,7 @@
                 </a>
             </li>
             <li>
-                <a href="<?= site_url('ue/C_ue'); ?>" aria-expanded="false">
+                <a href="<?= site_url('unidad/C_unidad'); ?>" aria-expanded="false">
                     <i class="icon icon-app-store"></i>
                     <span class="nav-text">Unidades Educativas</span>
                 </a>
