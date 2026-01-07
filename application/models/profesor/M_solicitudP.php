@@ -49,4 +49,48 @@ class M_solicitudP extends CI_Model
 
         return $this->db->get()->row();
     }
+
+    // FORMULARIO 
+    public function get_tipos_activos()
+    {
+        return $this->db->select('id_tipo_solicitud, nombre')
+            ->from('tipo_solicitud')
+            ->where('activo', true)
+            ->order_by('nombre', 'ASC')
+            ->get()->result();
+    }
+
+    public function get_directores_activos()
+    {
+        return $this->db->select("
+            id_usuario,
+            CONCAT(nombre,' ',apellido_paterno,' ',COALESCE(apellido_materno,'')) AS nombre_completo
+        ")
+            ->from('usuario')
+            ->where('activo', true)
+            ->where('rol_id', 2) // Director
+            ->order_by('nombre', 'ASC')
+            ->get()->result();
+    }
+
+    public function crear_solicitud($data_solicitud, $data_documento = null)
+    {
+        $this->db->trans_begin();
+
+        $this->db->insert('solicitud', $data_solicitud);
+        $id_solicitud = $this->db->insert_id();
+
+        if ($data_documento) {
+            $data_documento['solicitud_id'] = $id_solicitud;
+            $this->db->insert('documento_adjunto', $data_documento);
+        }
+
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+            return false;
+        }
+
+        $this->db->trans_commit();
+        return $id_solicitud;
+    }
 }

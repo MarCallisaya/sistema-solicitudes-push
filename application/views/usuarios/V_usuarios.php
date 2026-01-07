@@ -190,7 +190,7 @@
                                 <i class="fa fa-pencil"></i>
                             </button>
                             <button type="button" class="btn btn-sm btn-danger btn-del-usu" data-id="${data}">
-                                <i class="fa fa-trash"></i>
+                                ><i class="fa fa-trash"</i>
                             </button>
                         </div>
                         `;
