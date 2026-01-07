@@ -19,7 +19,7 @@
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Descripción</th>
+                                        <th>Descripcigit ón</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>

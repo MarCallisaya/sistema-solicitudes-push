@@ -28,9 +28,15 @@
                 </span>              
             </li>
         
-            <li><a href="widget-basic.html" aria-expanded="false">
+            <li><a href="<?= site_url('profesor/C_solicitudP'); ?>" aria-expanded="false">
                     <i class="icon icon-form"></i>
                     <span class="nav-text">Solicitudes</span>
+                </a>
+            </li>
+
+            <li><a href="<?= site_url('profesor/C_formulario'); ?>" aria-expanded="false">
+                    <i class="icon icon-single-copy-06"></i>
+                    <span class="nav-text">Formulario</span>
                 </a>
             </li>
 

@@ -66,7 +66,7 @@
                                     <i class="mdi mdi-account"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="<?= base_url('logout') ?>" class="dropdown-item">
+                                    <a href="<?= site_url('C_login/logout') ?>" class="dropdown-item">
                                         <i class="icon-key"></i>
                                         <span class="ml-2">Cerrar sesion </span>
                                     </a>
