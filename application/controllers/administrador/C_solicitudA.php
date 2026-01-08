@@ -1,5 +1,5 @@
 <?php
-class C_dashboard extends CI_Controller
+class C_solicitudA extends CI_Controller
 {
     public function __construct()
     {
@@ -15,7 +15,7 @@ class C_dashboard extends CI_Controller
     {
         $this->load->view('includes/header');
 		$this->load->view('includes/sidebar');
-        $this->load->view('administrador/V_dashboard');
+        $this->load->view('administrador/V_solicitudA');
 		//$this->load->view('home');
 		$this->load->view('includes/footer');
 

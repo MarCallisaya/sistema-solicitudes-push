@@ -57,3 +57,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['default_controller'] = 'C_login';
 $route['login'] = 'C_login';
 $route['logout'] = 'C_login/logout';
+
+/* RUTAS DIRECTOR*/
+$route['director/solicitudes'] = 'director/C_solicitudD/index';
+$route['director/solicitudes/list'] = 'director/C_solicitudD/ajax_list';

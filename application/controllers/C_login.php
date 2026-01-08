@@ -102,10 +102,10 @@ class C_login extends CI_Controller
                 redirect('profesor/C_solicitudP');
                 break;
             case 2:
-                redirect('director/C_dashboard');
+                redirect('director/C_solicitudD');
                 break;
             case 3:
-                redirect('administrador/C_dashboard');
+                redirect('administrador/C_solicitudA');
                 break;
             default:
                 $this->session->sess_destroy();

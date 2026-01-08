@@ -56,7 +56,7 @@ class C_solicitudP extends CI_Controller
             $is_pendiente = (strtoupper(trim($r->estado_actual)) === 'PENDIENTE');
             $btn_editar = $is_pendiente
                 ? '<button class="btn btn-sm btn-primary btnEditar" data-id="' . (int)$r->id_solicitud . '"><i class="fa fa-pencil"></i></button>'
-                : '<button class="btn btn-sm btn-secondary" disabled>Editar</button>';
+                : '<button class="btn btn-sm btn-secondary" disabled><i class="fa fa-pencil"></i></button>';
 
             $acciones = $btn_ver . ' ' . $btn_editar;
 
