@@ -22,7 +22,7 @@
 
 
             <li>
-                <a  href="<?= site_url('administrador/C_dashboard'); ?>" aria-expanded="false">
+                <a  href="<?= site_url('administrador/C_solicitudA'); ?>" aria-expanded="false">
                     <i class="icon icon-form"></i>
                     <span class="nav-text">Solicitudes</span>
                 </a>

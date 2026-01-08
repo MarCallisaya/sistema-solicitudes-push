@@ -41,8 +41,8 @@ class C_solicitudD extends CI_Controller
             $btn_ver = '<button class="btn btn-sm btn-info btnVer" data-id="'.(int)$r->id_solicitud.'"><i class="fa fa-eye"></i></button>';
 
             // Acciones: Estado + Observación
-            $btn_estado = '<button class="btn btn-sm btn-primary btnEstado" data-id="'.(int)$r->id_solicitud.'" data-estado="'.htmlspecialchars($r->estado_actual).'">Estado</button>';
-            $btn_obs    = '<button class="btn btn-sm btn-warning btnObs" data-id="'.(int)$r->id_solicitud.'" data-obs="'.htmlspecialchars($r->observaciones ?? '').'">Obs.</button>';
+            $btn_estado = '<button class="btn btn-sm btn-primary btnEstado" data-id="'.(int)$r->id_solicitud.'" data-estado="'.htmlspecialchars($r->estado_actual).'"><i class="fa fa-check-circle"></i></button>';
+            $btn_obs    = '<button class="btn btn-sm btn-warning btnObs" data-id="'.(int)$r->id_solicitud.'" data-obs="'.htmlspecialchars($r->observaciones ?? '').'"><i class="fa fa-pencil"></i></button>';
 
             $acciones = $btn_estado . ' ' . $btn_obs;
 
