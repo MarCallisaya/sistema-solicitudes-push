@@ -61,3 +61,7 @@ $route['logout'] = 'C_login/logout';
 /* RUTAS DIRECTOR*/
 $route['director/solicitudes'] = 'director/C_solicitudD/index';
 $route['director/solicitudes/list'] = 'director/C_solicitudD/ajax_list';
+
+/*RUTAS DE DOCUMENTO ADMIN*/
+$route['administrador/documentos'] = 'administrador/C_documento/index';
+

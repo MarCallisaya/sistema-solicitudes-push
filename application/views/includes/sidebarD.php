@@ -37,10 +37,21 @@
                 </a>
             </li>
 
-            <li><a href="widget-basic.html" aria-expanded="false"><i class="icon icon-single-04"></i><span
-                         class="nav-text">Usuarios</span></a></li>
-            <li><a href="widget-basic.html" aria-expanded="false"><i class="icon icon-app-store"></i><span
-                         class="nav-text">Unidades Educativas</span></a></li>
+            <li>
+                <a href="<?= site_url('usuarios/C_usuariosD'); ?>" aria-expanded="false">
+                    <i class="icon icon-single-04"></i>
+                    <span class="nav-text">Usuarios</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="<?= site_url('unidad/C_unidadD'); ?>" aria-expanded="false">
+                    <i class="icon icon-app-store"></i>
+                    <span class="nav-text">Unidades Educativas</span>
+                </a>
+            </li>
+
+
 
         </ul>
     </div>

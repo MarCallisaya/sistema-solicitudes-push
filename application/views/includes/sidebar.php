@@ -30,8 +30,13 @@
             
             <li><a href="widget-basic.html" aria-expanded="false"><i class="icon icon-plug"></i><span
                          class="nav-text">Notificaciones</span></a></li>
-            <li><a href="widget-basic.html" aria-expanded="false"><i class="icon icon-single-copy-06"></i><span
-                         class="nav-text">Documentos</span></a></li>
+            <li>
+                <a href="<?= site_url('administrador/C_documento'); ?>" aria-expanded="false">
+                    <i class="icon icon-single-copy-06"></i>
+                    <span class="nav-text">Documentos</span>
+                </a>
+            </li>
+
             <li>
                 <a href="<?= site_url('usuarios/C_usuarios'); ?>" aria-expanded="false">
                     <i class="icon icon-single-04"></i>
@@ -44,8 +49,12 @@
                     <span class="nav-text">Unidades Educativas</span>
                 </a>
             </li>
-            <li><a href="widget-basic.html" aria-expanded="false"><i class="icon icon-chart-bar-33"></i><span
-                         class="nav-text">Metricas</span></a></li>
+            <li>
+                <a href="<?= site_url('metricas/C_metricas'); ?>" aria-expanded="false">
+                    <i class="icon icon-chart-bar-33"></i>
+                    <span class="nav-text">Metricas</span>
+                </a>
+            </li>
          </ul>
      </div>
  </div>
