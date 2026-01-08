@@ -93,4 +93,60 @@ class M_solicitudP extends CI_Model
         $this->db->trans_commit();
         return $id_solicitud;
     }
+
+    // PARA EDITAR LA SOLICITUD
+    public function obtener_para_editar($id_solicitud, $profesor_id)
+    {
+        // Traer solicitud + archivo (si existe)
+        $this->db->select("
+        s.id_solicitud,
+        s.director_id,
+        s.tipo_solicitud_id,
+        s.referencia,
+        s.descripcion,
+        s.estado_actual,
+        da.archivo
+    ");
+        $this->db->from('solicitud s');
+        $this->db->join('documento_adjunto da', 'da.solicitud_id = s.id_solicitud', 'left');
+        $this->db->where('s.id_solicitud', (int)$id_solicitud);
+        $this->db->where('s.profesor_id', (int)$profesor_id);
+        $this->db->where('s.activo', true);
+
+        return $this->db->get()->row();
+    }
+
+    public function actualizar_solicitud($id_solicitud, $profesor_id, $data_solicitud)
+    {
+        $this->db->where('id_solicitud', (int)$id_solicitud);
+        $this->db->where('profesor_id', (int)$profesor_id);
+        $this->db->where('activo', true);
+        $this->db->where('estado_actual', 'PENDIENTE');
+        return $this->db->update('solicitud', $data_solicitud);
+    }
+
+    public function upsert_documento($id_solicitud, $ruta_web, $tipo_archivo)
+    {
+        // Si ya existe documento para esa solicitud → update; si no → insert
+        $existe = $this->db->select('id_documento_adjunto')
+            ->from('documento_adjunto')
+            ->where('solicitud_id', (int)$id_solicitud)
+            ->get()->row();
+
+        $data = [
+            'archivo' => $ruta_web,
+            'tipo_archivo' => $tipo_archivo,
+            'descripcion' => 'Adjunto de solicitud',
+            'fecha_actualizacion' => date('Y-m-d H:i:s'),
+        ];
+
+        if ($existe) {
+            $this->db->where('solicitud_id', (int)$id_solicitud);
+            return $this->db->update('documento_adjunto', $data);
+        } else {
+            $data['solicitud_id'] = (int)$id_solicitud;
+            $data['fecha_registro'] = date('Y-m-d H:i:s');
+            return $this->db->insert('documento_adjunto', $data);
+        }
+    }
 }

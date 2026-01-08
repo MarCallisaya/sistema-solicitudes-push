@@ -160,6 +160,66 @@
     </div>
 </div>
 
+<!-- MODAL EDITAR SOLICITUD -->
+<div class="modal fade" id="modalEditarSolicitud" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <form id="formSolicitudEditar" enctype="multipart/form-data">
+                <input type="hidden" name="id_solicitud" id="edit_id_solicitud">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Solicitud</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Director (Destinatario) *</label>
+                            <select name="director_id" id="edit_director_id" class="form-control" required></select>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Referencia</label>
+                            <input type="text" name="referencia" id="edit_referencia" class="form-control" maxlength="200">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descripción *</label>
+                        <textarea name="descripcion" id="edit_descripcion" class="form-control" rows="5" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Tipo de solicitud *</label>
+                            <select name="tipo_solicitud_id" id="edit_tipo_solicitud_id" class="form-control" required></select>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Reemplazar archivo (opcional)</label>
+                            <input type="file" name="archivo" id="edit_archivo" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                            <small class="text-muted" id="edit_archivo_actual"></small>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" id="btnActualizarSolicitud">Actualizar</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
 
 
 <script>
@@ -307,5 +367,105 @@
             });
         });
 
+        
+    //PARA EDITAR LA SOLICITUD
+    // ✅ Click Editar -> cargar datos y abrir modal
+    $(document).off('click', '.btnEditar').on('click', '.btnEditar', function() {
+        var id = $(this).data('id');
+
+        // cargar selects (reutilizamos ajax_form_data)
+        $.ajax({
+            url: BASE_URL + "profesor/C_solicitudP/ajax_form_data",
+            type: "GET",
+            dataType: "json",
+            success: function(resFD) {
+                if (!resFD.status) {
+                    if (window.Swal) Swal.fire('Error', 'No se pudo cargar datos', 'error');
+                    return;
+                }
+
+                var optsD = '<option value="">Seleccione...</option>';
+                (resFD.directores || []).forEach(function(d) {
+                    optsD += '<option value="' + d.id_usuario + '">' + d.nombre_completo + '</option>';
+                });
+                $('#edit_director_id').html(optsD);
+
+                var optsT = '<option value="">Seleccione...</option>';
+                (resFD.tipos || []).forEach(function(t) {
+                    optsT += '<option value="' + t.id_tipo_solicitud + '">' + t.nombre + '</option>';
+                });
+                $('#edit_tipo_solicitud_id').html(optsT);
+
+                // ahora traer datos de la solicitud
+                $.ajax({
+                    url: BASE_URL + "profesor/C_solicitudP/ajax_get_editar/" + id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(res) {
+                        if (!res.status) {
+                            if (window.Swal) Swal.fire('Error', res.message || 'No se pudo cargar', 'error');
+                            return;
+                        }
+
+                        var d = res.data;
+
+                        $('#edit_id_solicitud').val(d.id_solicitud);
+                        $('#edit_director_id').val(d.director_id);
+                        $('#edit_tipo_solicitud_id').val(d.tipo_solicitud_id);
+                        $('#edit_referencia').val(d.referencia || '');
+                        $('#edit_descripcion').val(d.descripcion || '');
+
+                        if (d.archivo) {
+                            $('#edit_archivo_actual').html('Archivo actual: <a href="' + (BASE_URL + d.archivo.replace(/^\/+/, '')) + '" target="_blank">Abrir</a>');
+                        } else {
+                            $('#edit_archivo_actual').text('Archivo actual: —');
+                        }
+
+                        $('#modalEditarSolicitud').modal('show');
+                    }
+                });
+            }
+        });
+    });
+
+    // ✅ Submit actualizar
+    $('#formSolicitudEditar').off('submit').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        $('#btnActualizarSolicitud').prop('disabled', true).text('Actualizando...');
+
+        $.ajax({
+            url: BASE_URL + "profesor/C_solicitudP/ajax_actualizar",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            success: function(res) {
+                if (!res.status) {
+                    if (window.Swal) Swal.fire('Error', res.message || 'No se pudo actualizar', 'error');
+                    else alert(res.message || 'No se pudo actualizar');
+                    return;
+                }
+
+                if (window.Swal) Swal.fire('Éxito', res.message || 'Actualizado', 'success');
+
+                $('#modalEditarSolicitud').modal('hide');
+                $('#datatable_prof').DataTable().ajax.reload(null, false);
+            },
+            error: function() {
+                if (window.Swal) Swal.fire('Error', 'Error del servidor al actualizar', 'error');
+                else alert('Error del servidor al actualizar');
+            },
+            complete: function() {
+                $('#btnActualizarSolicitud').prop('disabled', false).text('Actualizar');
+            }
+        });
+    });
+
     })();
+
+
 </script>

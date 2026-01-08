@@ -203,4 +203,91 @@ class C_solicitudP extends CI_Controller
 
         echo json_encode(['status' => true, 'message' => 'Solicitud registrada correctamente.']);
     }
+
+    // PARA EDITAR LA SOLICITUD
+    public function ajax_get_editar($id_solicitud)
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        $profesor_id = (int) $this->session->userdata('id_usuario');
+        $row = $this->M_solicitudP->obtener_para_editar((int)$id_solicitud, $profesor_id);
+
+        if (!$row) {
+            echo json_encode(['status' => false, 'message' => 'Solicitud no encontrada']);
+            return;
+        }
+
+        if (strtoupper(trim($row->estado_actual)) !== 'PENDIENTE') {
+            echo json_encode(['status' => false, 'message' => 'Solo puedes editar si está en PENDIENTE']);
+            return;
+        }
+
+        echo json_encode(['status' => true, 'data' => $row]);
+    }
+
+    public function ajax_actualizar()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        $profesor_id = (int) $this->session->userdata('id_usuario');
+
+        $id_solicitud = (int) $this->input->post('id_solicitud', true);
+        $director_id  = (int) $this->input->post('director_id', true);
+        $tipo_id      = (int) $this->input->post('tipo_solicitud_id', true);
+        $referencia   = trim($this->input->post('referencia', true));
+        $descripcion  = trim($this->input->post('descripcion', true));
+
+        if ($id_solicitud <= 0 || $director_id <= 0 || $tipo_id <= 0 || $descripcion === '') {
+            echo json_encode(['status' => false, 'message' => 'Completa: Director, Tipo y Descripción.']);
+            return;
+        }
+
+        // 1) Actualizar solicitud (solo si PENDIENTE)
+        $data_solicitud = [
+            'director_id' => $director_id,
+            'tipo_solicitud_id' => $tipo_id,
+            'referencia' => $referencia,
+            'descripcion' => $descripcion,
+            'fecha_actualizacion' => date('Y-m-d H:i:s'),
+        ];
+
+        $ok = $this->M_solicitudP->actualizar_solicitud($id_solicitud, $profesor_id, $data_solicitud);
+
+        if (!$ok || $this->db->affected_rows() === 0) {
+            echo json_encode(['status' => false, 'message' => 'No se actualizó. Verifica que esté en PENDIENTE.']);
+            return;
+        }
+
+        // 2) Si sube archivo → reemplazar (upsert)
+        if (!empty($_FILES['archivo']['name'])) {
+            $upload_path = FCPATH . 'uploads/solicitudes/';
+            if (!is_dir($upload_path)) {
+                @mkdir($upload_path, 0777, true);
+            }
+
+            $config = [
+                'upload_path'   => $upload_path,
+                'allowed_types' => 'pdf|jpg|jpeg|png',
+                'max_size'      => 5120,
+                'encrypt_name'  => true
+            ];
+            $this->load->library('upload', $config);
+
+            if (!$this->upload->do_upload('archivo')) {
+                echo json_encode(['status' => false, 'message' => strip_tags($this->upload->display_errors())]);
+                return;
+            }
+
+            $up = $this->upload->data();
+            $ruta_web = '/uploads/solicitudes/' . $up['file_name'];
+
+            $this->M_solicitudP->upsert_documento($id_solicitud, $ruta_web, $up['file_ext']);
+        }
+
+        echo json_encode(['status' => true, 'message' => 'Solicitud actualizada correctamente.']);
+    }
 }
