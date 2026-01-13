@@ -54,7 +54,9 @@
 <script src="<?= base_url('assets/vendor/jquery.counterup/jquery.counterup.min.js'); ?>"></script>
 
 
-
+<!--  13 1 25 -->
+<!-- Chart ChartJS plugin files -->
+<script src="<?= base_url('assets/vendor/chart.js/Chart.bundle.min.js'); ?>"></script>
 
 </body>
 

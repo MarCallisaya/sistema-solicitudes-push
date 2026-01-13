@@ -50,6 +50,7 @@
                 </a>
             </li>
             <li>
+                <!-- 13 1 26 -->
                 <a href="<?= site_url('metricas/C_metricas'); ?>" aria-expanded="false">
                     <i class="icon icon-chart-bar-33"></i>
                     <span class="nav-text">Metricas</span>
