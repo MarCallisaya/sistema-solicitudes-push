@@ -65,3 +65,10 @@ $route['director/solicitudes/list'] = 'director/C_solicitudD/ajax_list';
 /*RUTAS DE DOCUMENTO ADMIN*/
 $route['administrador/documentos'] = 'administrador/C_documento/index';
 
+/*RUTAS DE NOTIFICACIONES ADMIN*/
+
+$route['notificacion'] = 'notificacion/C_notificacion/index';
+$route['notificacion/ajax_listar'] = 'notificacion/C_notificacion/ajax_listar';
+
+
+

@@ -58,6 +58,15 @@
 <!-- Chart ChartJS plugin files -->
 <script src="<?= base_url('assets/vendor/chart.js/Chart.bundle.min.js'); ?>"></script>
 
+<!-- 13 1 25 -->
+ <!-- NOTIFICACIONES PUSH -->
+<script>
+  window.BASE_URL = "<?= base_url(); ?>";
+</script>
+
+<script type="module" src="<?= base_url('assets/js/push_fcm.js'); ?>"></script>
+
+
 </body>
 
 </html>

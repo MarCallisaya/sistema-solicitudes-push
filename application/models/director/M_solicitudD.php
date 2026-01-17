@@ -70,4 +70,16 @@ class M_solicitudD extends CI_Model
             'fecha_actualizacion' => date('Y-m-d H:i:s')
         ]);
     }
+
+
+    public function get_profesor_id($id_solicitud)
+{
+    return $this->db->select('profesor_id')
+        ->from('solicitud')
+        ->where('id_solicitud', (int)$id_solicitud)
+        ->where('activo', true)
+        ->get()
+        ->row_array();
+}
+
 }

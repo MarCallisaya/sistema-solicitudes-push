@@ -201,6 +201,31 @@ class C_solicitudP extends CI_Controller
             return;
         }
 
+        /* ====== REGLA 1: Push a Director + Admins ====== */
+        $this->load->model('M_push');
+        $this->load->library('Fcm_service');
+
+        // Admins (rol 3)
+        $admins = $this->M_push->get_admin_ids(); // debe devolver array de IDs
+
+        // Lista final: director + admins, sin duplicados y sin ceros
+        $destinatarios = array_filter(array_unique(array_merge([$director_id], $admins)));
+
+        $titulo = 'Nueva solicitud';
+        $mensaje = 'Se registró una nueva solicitud. Revisa el sistema.';
+        $tipo_evento = 'SOLICITUD_CREADA';
+
+        foreach ($destinatarios as $uid) {
+            $this->fcm_service->send_to_user(
+                (int)$uid,
+                $titulo,
+                $mensaje,
+                $tipo_evento,
+                (int)$id
+            );
+        }
+        /* ====== FIN REGLA 1 ====== */
+
         echo json_encode(['status' => true, 'message' => 'Solicitud registrada correctamente.']);
     }
 

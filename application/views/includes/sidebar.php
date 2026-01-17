@@ -28,8 +28,13 @@
                 </a>
             </li>
             
-            <li><a href="widget-basic.html" aria-expanded="false"><i class="icon icon-plug"></i><span
-                         class="nav-text">Notificaciones</span></a></li>
+            <li>
+                <a href="<?= site_url('notificacion/C_notificacion'); ?>" aria-expanded="false">
+                    <i class="icon icon-plug"></i>
+                    <span class="nav-text">Notificaciones</span>
+                </a>
+            </li>
+
             <li>
                 <a href="<?= site_url('administrador/C_documento'); ?>" aria-expanded="false">
                     <i class="icon icon-single-copy-06"></i>

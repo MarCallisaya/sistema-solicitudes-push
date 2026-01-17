@@ -76,22 +76,51 @@ class C_solicitudA extends CI_Controller
     }
 
     public function ajax_actualizar_estado()
-    {
-        if (!$this->input->is_ajax_request()) show_404();
+{
+    if (!$this->input->is_ajax_request()) show_404();
 
-        $id_solicitud = (int)$this->input->post('id_solicitud', true);
-        $estado       = strtoupper(trim($this->input->post('estado', true)));
+    $id_solicitud = (int)$this->input->post('id_solicitud', true);
+    $estado       = strtoupper(trim($this->input->post('estado', true)));
 
-        $permitidos = ['PENDIENTE', 'EN_REVISION', 'ACEPTADO', 'RECHAZADO'];
-        if (!in_array($estado, $permitidos, true)) {
-            echo json_encode(['status' => false, 'message' => 'Estado no válido']);
-            return;
-        }
-
-        $ok = $this->M_solicitudA->actualizar_estado($id_solicitud, $estado);
-
-        echo json_encode(['status' => (bool)$ok, 'message' => $ok ? 'Estado actualizado' : 'No se pudo actualizar']);
+    $permitidos = ['PENDIENTE', 'EN_REVISION', 'ACEPTADO', 'RECHAZADO'];
+    if (!in_array($estado, $permitidos, true)) {
+        echo json_encode(['status' => false, 'message' => 'Estado no válido']);
+        return;
     }
+
+    $ok = $this->M_solicitudA->actualizar_estado($id_solicitud, $estado);
+
+    // ✅ SOLO si se actualizó, enviamos push al profesor dueño
+    if ($ok) {
+        $this->load->model('M_push');
+        $this->load->library('Fcm_service');
+
+        $profesor_id = $this->M_push->get_profesor_id_by_solicitud($id_solicitud);
+
+        if ($profesor_id > 0) {
+            $map = [
+                'EN_REVISION' => 'Tu solicitud está en revisión.',
+                'ACEPTADO'    => 'Tu solicitud fue aceptada.',
+                'RECHAZADO'   => 'Tu solicitud fue rechazada.',
+                'PENDIENTE'   => 'Tu solicitud volvió a pendiente.'
+            ];
+
+            $this->fcm_service->send_to_user(
+                (int)$profesor_id,
+                'Estado de solicitud',
+                $map[$estado] ?? ('Estado actualizado: ' . $estado),
+                'SOLICITUD_ESTADO',
+                (int)$id_solicitud
+            );
+        }
+    }
+
+    echo json_encode([
+        'status'  => (bool)$ok,
+        'message' => $ok ? 'Estado actualizado' : 'No se pudo actualizar'
+    ]);
+}
+
 
     public function ajax_actualizar_observacion()
     {

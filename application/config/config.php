@@ -23,6 +23,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
+
+// PARA LA HORA 13 1 26
+
+date_default_timezone_set('America/La_Paz');
+
+
+
 $config['base_url'] = 'http://localhost/proyecto-sistema-push/';
 
 
@@ -531,3 +538,8 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+
+// PAARA LAS NOTIFICACIONES PUSH 13 1 26
+$config['fcm_project_id'] = 'sistema-push-8284a';
+$config['fcm_sa_path']    = APPPATH . 'third_party/firebase/serviceAccount.json';
