@@ -92,7 +92,6 @@ class M_usuarios extends CI_Model
             ->row();
 
         if ($asig) {
-            // Si tu PK no es id_asignacion, aquí se cambia
             $this->db->where('id_asignacion', $asig->id_asignacion);
             return $this->db->update('asignacion', [
                 'unidad_educativa_id' => $unidad_educativa_id
@@ -110,11 +109,8 @@ class M_usuarios extends CI_Model
     {
         $this->db->trans_start();
 
-        // 1) Desactivar usuario
         $this->db->where('id_usuario', $id_usuario);
         $this->db->update('usuario', ['activo' => false]);
-
-        // 2) Desactivar asignaciones activas (para que ya no aparezca en listados)
         $this->db->where('usuario_id', $id_usuario);
         $this->db->where('activo', true);
         $this->db->update('asignacion', ['activo' => false]);

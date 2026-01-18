@@ -35,7 +35,7 @@
     </div>
 </div>
 
-<!-- MODAL ÚNICO (Registrar / Editar) -->
+<!-- MODAL (Registrar / Editar) -->
 <div class="modal fade" id="modalUnidad" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
@@ -317,7 +317,7 @@
             });
         });
 
-        // ELIMINAR (soft delete)
+        // ELIMINAR 
         $(document).off('click', '.btn-del').on('click', '.btn-del', function() {
             const id = $(this).data('id');
 

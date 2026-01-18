@@ -2,17 +2,14 @@
 
 class M_notificacion extends CI_Model
 {
-    // Para DataTables (server-side simple)
     public function datatable_list($usuario_id, $start, $length, $search = '')
     {
-        // Base query
         $this->db->from('historial_notificaciones hn');
         $this->db->join('solicitud s', 's.id_solicitud = hn.solicitud_id', 'left');
-        $this->db->join('usuario u_prof', 'u_prof.id_usuario = s.profesor_id', 'left'); // remitente profesor
+        $this->db->join('usuario u_prof', 'u_prof.id_usuario = s.profesor_id', 'left'); 
 
         $this->db->where('hn.usuario_id', (int)$usuario_id);
 
-        // 🔎 Search (busca por referencia, mensaje, nombre del profesor)
         if ($search !== '') {
             $this->db->group_start();
             $this->db->like('s.referencia', $search);
@@ -23,10 +20,9 @@ class M_notificacion extends CI_Model
             $this->db->group_end();
         }
 
-        // Total filtrado (para recordsFiltered)
         $filtered_count = $this->db->count_all_results('', false);
 
-        // Select columnas
+
         $this->db->select("
             hn.id_notificacion,
             COALESCE(s.referencia, '-') AS referencia,
@@ -40,14 +36,12 @@ class M_notificacion extends CI_Model
 
         $this->db->order_by('hn.fecha_envio', 'DESC');
 
-        // Paginación
         if ((int)$length !== -1) {
             $this->db->limit((int)$length, (int)$start);
         }
 
         $rows = $this->db->get()->result_array();
 
-        // Total sin filtro (recordsTotal)
         $total_count = $this->db->from('historial_notificaciones')
             ->where('usuario_id', (int)$usuario_id)
             ->count_all_results();

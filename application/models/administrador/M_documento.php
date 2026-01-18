@@ -15,9 +15,8 @@ class M_documento extends CI_Model
         $this->db->join('usuario u', 'u.id_usuario = s.profesor_id', 'inner');
         $this->db->join('documento_adjunto da', 'da.solicitud_id = s.id_solicitud', 'inner');
 
-        // Solo activos (si quieres incluir también los desactivados lo quitamos)
-        $this->db->where('s.activo', true);
 
+        $this->db->where('s.activo', true); // Solo documentos activos
         $this->db->order_by('s.fecha_registro', 'DESC');
 
         return $this->db->get()->result();

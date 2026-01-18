@@ -1,4 +1,5 @@
 <style>
+    /* Colores para los Estados*/
     .badge-estado {
         display: inline-flex;
         align-items: center;
@@ -34,7 +35,7 @@
         background: #6c757d;
     }
 
-
+    /*Colores para la cantidad de solicitudes por estado */
     .sol-resumen {
         display: flex;
         align-items: center;
@@ -172,7 +173,7 @@
     </div>
 </div>
 
-<!-- MODAL VER SOLICITUD (CARTA) -->
+<!-- MODAL VER SOLICITUD -->
 <div class="modal fade" id="modalVerSolicitud" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -185,11 +186,7 @@
             </div>
 
             <div class="modal-body">
-                <div id="cartaSolicitud" style="
-       font-family: Arial, sans-serif;
-       font-size: 16px;
-       line-height: 1.6;
-     ">
+                <div id="cartaSolicitud" style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; ">
                     <div style="text-align:right;">
                         <span id="cartaFecha"></span>
                     </div>
@@ -255,7 +252,7 @@
                         <div class="form-group col-md-6">
                             <label>Referencia</label>
                             <input type="text" name="referencia" id="referencia" class="form-control"
-                                maxlength="200" placeholder="Ej: Solicitud de permiso"  oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\/\-,\.:]/g, '')">
+                                maxlength="200" placeholder="Ej: Solicitud de permiso" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\/\-,\.:]/g, '')">
                         </div>
                     </div>
 
@@ -368,7 +365,6 @@
 <script>
     (function initSolicitudesProfesor() {
 
-        // ✅ esperar a jQuery + DataTable
         if (!window.jQuery || !window.jQuery.fn || !window.jQuery.fn.DataTable) {
             return setTimeout(initSolicitudesProfesor, 50);
         }
@@ -400,8 +396,6 @@
             return '<span class="badge-estado ' + cls + '">' + e + '</span>';
         }
 
-
-        // ✅ 1) Inicializar DataTable SOLO una vez
         /*if (!$.fn.dataTable.isDataTable('#datatable_prof')) {
             console.log('DataTable solicitudes inicializando...');
 
@@ -431,7 +425,7 @@
                 ],
                 responsive: true,
                 columnDefs: [{
-                    targets: 4, // Estado
+                    targets: 4,
                     className: 'text-center',
                     render: function(data) {
                         return badgeEstado(data);
@@ -443,7 +437,7 @@
         }
 
 
-        // ✅ 2) VER (carta)
+        //  VER (carta)
         $(document).off('click', '.btnVer').on('click', '.btnVer', function() {
             var id = $(this).data('id');
 
@@ -474,8 +468,7 @@
             });
         });
 
-        // ✅ 3) Abrir modal Formulario + cargar selects
-        // (usamos document.on para que funcione aunque el botón esté en header)
+        // modal formulario
         $(document).off('click', '[data-target="#modalSolicitud"]').on('click', '[data-target="#modalSolicitud"]', function() {
             $('#formSolicitud')[0].reset();
             $('#director_id').html('<option value="">Cargando...</option>');
@@ -510,8 +503,7 @@
             });
         });
 
-        // ✅ 4) Guardar Solicitud (AJAX + archivo)
-        // Evitar doble bind si CI recarga vista o algo
+        //  Guardar Solicitud 
         $('#formSolicitud').off('submit').on('submit', function(e) {
             e.preventDefault();
 
@@ -538,7 +530,6 @@
                     $('#modalSolicitud').modal('hide');
                     $('#formSolicitud')[0].reset();
 
-                    // ✅ recargar tabla
                     $('#datatable_prof').DataTable().ajax.reload(null, false);
                     cargarResumenAdmin();
                 },
@@ -554,11 +545,10 @@
 
 
         //PARA EDITAR LA SOLICITUD
-        // ✅ Click Editar -> cargar datos y abrir modal
+
         $(document).off('click', '.btnEditar').on('click', '.btnEditar', function() {
             var id = $(this).data('id');
 
-            // cargar selects (reutilizamos ajax_form_data)
             $.ajax({
                 url: BASE_URL + "profesor/C_solicitudP/ajax_form_data",
                 type: "GET",
@@ -581,7 +571,6 @@
                     });
                     $('#edit_tipo_solicitud_id').html(optsT);
 
-                    // ahora traer datos de la solicitud
                     $.ajax({
                         url: BASE_URL + "profesor/C_solicitudP/ajax_get_editar/" + id,
                         type: "GET",
@@ -613,7 +602,7 @@
             });
         });
 
-        // ✅ Submit actualizar
+        // actualizar
         $('#formSolicitudEditar').off('submit').on('submit', function(e) {
             e.preventDefault();
 

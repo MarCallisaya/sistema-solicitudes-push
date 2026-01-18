@@ -18,7 +18,7 @@ class C_metricas extends CI_Controller
         $this->load->view('metricas/V_metricas');
         $this->load->view('includes/footer');
     }
-    // ====== AJAX ENDPOINTS ======
+
     public function por_estado()
     {
         echo json_encode($this->M_metricas->por_estado());

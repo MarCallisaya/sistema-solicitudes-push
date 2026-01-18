@@ -111,7 +111,7 @@
         }
         initDT();
 
-
+        //Lista de docentes
         $(document).off('click', '.btnDocentes').on('click', '.btnDocentes', function(e) {
             e.preventDefault();
 

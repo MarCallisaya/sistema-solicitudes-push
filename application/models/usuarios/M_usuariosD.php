@@ -42,6 +42,4 @@ class M_usuariosD extends CI_Model
 
         return $this->db->get()->result_array();
     }
-
-   
 }

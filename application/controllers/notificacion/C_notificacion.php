@@ -5,7 +5,6 @@ class C_notificacion extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        // Asegúrate de tener tu validación de sesión aquí
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
@@ -15,7 +14,6 @@ class C_notificacion extends CI_Controller
 
     public function index()
     {
-        // Carga tu vista en el layout que uses
         $data['title'] = 'Notificaciones';
         $this->load->view('includes/header', $data);
         $this->load->view('includes/sidebar');
@@ -29,7 +27,6 @@ class C_notificacion extends CI_Controller
 
         $usuario_id = (int)$this->session->userdata('id_usuario');
 
-        // DataTables params
         $draw   = (int)$this->input->post('draw');
         $start  = (int)$this->input->post('start');
         $length = (int)$this->input->post('length');

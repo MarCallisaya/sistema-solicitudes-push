@@ -3,7 +3,7 @@
 importScripts("https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js");
 
-// Pega aquí TU firebaseConfig
+
 firebase.initializeApp({
     apiKey: "AIzaSyAoGSevzD7Xk-gQF2Ag9bRYxFn25PBz8Lk",
     authDomain: "sistema-push-8284a.firebaseapp.com",

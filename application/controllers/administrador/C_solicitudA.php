@@ -39,9 +39,10 @@ class C_solicitudA extends CI_Controller
 
             $btn_ver = '<button class="btn btn-sm btn-info btnVer" data-id="' . (int)$r->id_solicitud . '"><i class="fa fa-eye"></i></button>';
 
-            $btn_estado = '<button class="btn btn-sm btn-primary btnEstado" data-id="' . (int)$r->id_solicitud . '" data-estado="' . htmlspecialchars($r->estado_actual) . '"><i class="fa fa-check-circle"></i>
-</button>';
+            $btn_estado = '<button class="btn btn-sm btn-primary btnEstado" data-id="' . (int)$r->id_solicitud . '" data-estado="' . htmlspecialchars($r->estado_actual) . '"><i class="fa fa-check-circle"></i></button>';
+
             $btn_obs    = '<button class="btn btn-sm btn-warning btnObs" data-id="' . (int)$r->id_solicitud . '" data-obs="' . htmlspecialchars($r->observaciones ?? '') . '"><i class="fa fa-pencil"></i></button>';
+
             $btn_del    = '<button class="btn btn-sm btn-danger btnEliminar" data-id="' . (int)$r->id_solicitud . '"><i class="fa fa-trash"></i></button>';
 
             $acciones = $btn_estado . ' ' . $btn_obs . ' ' . $btn_del;
@@ -50,7 +51,7 @@ class C_solicitudA extends CI_Controller
                 $btn_ver,
                 $r->tipo_solicitud,
                 $archivo_html,
-                $r->profesor_nombre,          // Remitente
+                $r->profesor_nombre,
                 $r->estado_actual,
                 $r->fecha_registro,
                 $r->observaciones ?? '',
@@ -64,62 +65,57 @@ class C_solicitudA extends CI_Controller
     public function ajax_ver_carta($id_solicitud)
     {
         if (!$this->input->is_ajax_request()) show_404();
-
         $row = $this->M_solicitudA->obtener_carta((int)$id_solicitud);
-
         if (!$row) {
             echo json_encode(['status' => false, 'message' => 'Solicitud no encontrada']);
             return;
         }
-
         echo json_encode(['status' => true, 'data' => $row]);
     }
 
     public function ajax_actualizar_estado()
-{
-    if (!$this->input->is_ajax_request()) show_404();
+    {
+        if (!$this->input->is_ajax_request()) show_404();
 
-    $id_solicitud = (int)$this->input->post('id_solicitud', true);
-    $estado       = strtoupper(trim($this->input->post('estado', true)));
+        $id_solicitud = (int)$this->input->post('id_solicitud', true);
+        $estado       = strtoupper(trim($this->input->post('estado', true)));
 
-    $permitidos = ['PENDIENTE', 'EN_REVISION', 'ACEPTADO', 'RECHAZADO'];
-    if (!in_array($estado, $permitidos, true)) {
-        echo json_encode(['status' => false, 'message' => 'Estado no válido']);
-        return;
-    }
-
-    $ok = $this->M_solicitudA->actualizar_estado($id_solicitud, $estado);
-
-    // ✅ SOLO si se actualizó, enviamos push al profesor dueño
-    if ($ok) {
-        $this->load->model('M_push');
-        $this->load->library('Fcm_service');
-
-        $profesor_id = $this->M_push->get_profesor_id_by_solicitud($id_solicitud);
-
-        if ($profesor_id > 0) {
-            $map = [
-                'EN_REVISION' => 'Tu solicitud está en revisión.',
-                'ACEPTADO'    => 'Tu solicitud fue aceptada.',
-                'RECHAZADO'   => 'Tu solicitud fue rechazada.',
-                'PENDIENTE'   => 'Tu solicitud volvió a pendiente.'
-            ];
-
-            $this->fcm_service->send_to_user(
-                (int)$profesor_id,
-                'Estado de solicitud',
-                $map[$estado] ?? ('Estado actualizado: ' . $estado),
-                'SOLICITUD_ESTADO',
-                (int)$id_solicitud
-            );
+        $permitidos = ['PENDIENTE', 'EN_REVISION', 'ACEPTADO', 'RECHAZADO'];
+        if (!in_array($estado, $permitidos, true)) {
+            echo json_encode(['status' => false, 'message' => 'Estado no válido']);
+            return;
         }
-    }
 
-    echo json_encode([
-        'status'  => (bool)$ok,
-        'message' => $ok ? 'Estado actualizado' : 'No se pudo actualizar'
-    ]);
-}
+        $ok = $this->M_solicitudA->actualizar_estado($id_solicitud, $estado);
+        if ($ok) {
+            $this->load->model('M_push');
+            $this->load->library('Fcm_service');
+
+            $profesor_id = $this->M_push->get_profesor_id_by_solicitud($id_solicitud);
+
+            if ($profesor_id > 0) {
+                $map = [
+                    'EN_REVISION' => 'Tu solicitud está en revisión.',
+                    'ACEPTADO'    => 'Tu solicitud fue aceptada.',
+                    'RECHAZADO'   => 'Tu solicitud fue rechazada.',
+                    'PENDIENTE'   => 'Tu solicitud volvió a pendiente.'
+                ];
+
+                $this->fcm_service->send_to_user(
+                    (int)$profesor_id,
+                    'Estado de solicitud',
+                    $map[$estado] ?? ('Estado actualizado: ' . $estado),
+                    'SOLICITUD_ESTADO',
+                    (int)$id_solicitud
+                );
+            }
+        }
+
+        echo json_encode([
+            'status'  => (bool)$ok,
+            'message' => $ok ? 'Estado actualizado' : 'No se pudo actualizar'
+        ]);
+    }
 
 
     public function ajax_actualizar_observacion()
@@ -167,27 +163,25 @@ class C_solicitudA extends CI_Controller
 
 
     public function ajax_resumen_estados()
-{
-    if (!$this->input->is_ajax_request()) show_404();
+    {
+        if (!$this->input->is_ajax_request()) show_404();
 
-    $rows = $this->M_solicitudA->resumen_estados_admin();
+        $rows = $this->M_solicitudA->resumen_estados_admin();
 
-    $out = [
-        'PENDIENTE'   => 0,
-        'EN_REVISION' => 0,
-        'ACEPTADO'    => 0,
-        'RECHAZADO'   => 0
-    ];
+        $out = [
+            'PENDIENTE'   => 0,
+            'EN_REVISION' => 0,
+            'ACEPTADO'    => 0,
+            'RECHAZADO'   => 0
+        ];
 
-    foreach ($rows as $r) {
-        $k = strtoupper(trim($r['estado_actual']));
-        if (isset($out[$k])) $out[$k] = (int)$r['total'];
+        foreach ($rows as $r) {
+            $k = strtoupper(trim($r['estado_actual']));
+            if (isset($out[$k])) $out[$k] = (int)$r['total'];
+        }
+
+        $total = array_sum($out);
+
+        echo json_encode(['status' => true, 'data' => $out, 'total' => $total]);
     }
-
-    $total = array_sum($out);
-
-    echo json_encode(['status' => true, 'data' => $out, 'total' => $total]);
-}
-
-
 }

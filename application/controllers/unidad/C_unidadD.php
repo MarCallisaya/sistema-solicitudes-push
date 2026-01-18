@@ -11,7 +11,7 @@ class C_unidadD extends CI_Controller
 
     public function index()
     {
-        $data = []; // ✅ evita undefined variable
+        $data = [];
 
         $this->load->view('includes/header');
         $this->load->view('includes/sidebarD');
@@ -26,20 +26,17 @@ class C_unidadD extends CI_Controller
 
     //para ver los docentes por unidad
     public function ajax_docentes($unidad_id)
-{
-    if (!$this->input->is_ajax_request()) show_404();
+    {
+        if (!$this->input->is_ajax_request()) show_404();
 
-    $unidad_id = (int)$unidad_id;
-    if ($unidad_id <= 0) {
-        echo json_encode(['status' => false, 'message' => 'ID inválido']);
-        return;
+        $unidad_id = (int)$unidad_id;
+        if ($unidad_id <= 0) {
+            echo json_encode(['status' => false, 'message' => 'ID inválido']);
+            return;
+        }
+
+        $rows = $this->M_unidadD->get_docentes_by_unidad($unidad_id);
+
+        echo json_encode(['status' => true, 'data' => $rows]);
     }
-
-    $rows = $this->M_unidadD->get_docentes_by_unidad($unidad_id);
-
-    echo json_encode(['status' => true, 'data' => $rows]);
-}
-
-
-
 }

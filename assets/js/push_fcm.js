@@ -3,9 +3,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
 
-/* ====== 1) CONFIG ====== */
+
 const firebaseConfig = {
-  // PEGA TU firebaseConfig COMPLETO aquí
+
   apiKey: "AIzaSyAoGSevzD7Xk-gQF2Ag9bRYxFn25PBz8Lk",
   authDomain: "sistema-push-8284a.firebaseapp.com",
   projectId: "sistema-push-8284a",
@@ -16,14 +16,14 @@ const firebaseConfig = {
 
 const VAPID_KEY = "BMg3Gv0Lg6EEl2rD16_pcL6rphPoYhmB-CcJIaHi0a24VunQl33u4P3P4KHcKI6Vtc2OV6g8bmpJw9XWGHT1tiQ";
 
-/* ====== 2) EVITAR DOBLE INIT ====== */
+
 if (!window.__PUSH_FCM_INIT__) {
   window.__PUSH_FCM_INIT__ = true;
 
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
-  // Función global para el botón del header
+
   window.activarNotificaciones = async function activarNotificaciones() {
     try {
       if (!("serviceWorker" in navigator)) {
@@ -37,20 +37,20 @@ if (!window.__PUSH_FCM_INIT__) {
         return;
       }
 
-      // 1) Registrar SW (ruta correcta)
+
       const swReg = await navigator.serviceWorker.register(
         window.BASE_URL + "firebase-messaging-sw.js"
       );
       await navigator.serviceWorker.ready;
 
-      // 2) Pedir permiso
+
       const permiso = await Notification.requestPermission();
       if (permiso !== "granted") {
         alert("Permiso de notificaciones denegado.");
         return;
       }
 
-      // 3) Obtener token
+      // Obtener token
       const token = await getToken(messaging, {
         vapidKey: VAPID_KEY,
         serviceWorkerRegistration: swReg
@@ -63,7 +63,7 @@ if (!window.__PUSH_FCM_INIT__) {
 
       console.log("FCM TOKEN:", token);
 
-      // 4) Enviar token al backend CI3
+      // Enviar token al backend 
       const resp = await fetch(window.BASE_URL + "push/guardar_token", {
         method: "POST",
         headers: {
@@ -88,21 +88,20 @@ if (!window.__PUSH_FCM_INIT__) {
     }
   };
 
-  // Foreground: cuando la página está abierta
-  // Foreground: cuando la página está abierta
-onMessage(messaging, (payload) => {
-  console.log("PUSH FOREGROUND payload:", payload);
 
-  try {
-    const title = payload?.notification?.title || "Notificación";
-    const options = {
-      body: payload?.notification?.body || "",
-      icon: payload?.notification?.icon || undefined
-    };
-    new Notification(title, options);
-  } catch (e) {
-    console.warn("No se pudo mostrar notificación en foreground:", e);
-  }
-});
+  onMessage(messaging, (payload) => {
+    console.log("PUSH FOREGROUND payload:", payload);
+
+    try {
+      const title = payload?.notification?.title || "Notificación";
+      const options = {
+        body: payload?.notification?.body || "",
+        icon: payload?.notification?.icon || undefined
+      };
+      new Notification(title, options);
+    } catch (e) {
+      console.warn("No se pudo mostrar notificación en foreground:", e);
+    }
+  });
 
 }

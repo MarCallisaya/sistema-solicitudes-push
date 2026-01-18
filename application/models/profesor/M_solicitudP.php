@@ -22,8 +22,6 @@ class M_solicitudP extends CI_Model
         $this->db->where('s.profesor_id', $profesor_id);
         $this->db->where('s.activo', true);
 
-        // "orden de llegada" = primero los más antiguos
-
         $this->db->order_by('s.fecha_registro', 'DESC');
 
 
@@ -68,7 +66,7 @@ class M_solicitudP extends CI_Model
         ")
             ->from('usuario')
             ->where('activo', true)
-            ->where('rol_id', 2) // Director
+            ->where('rol_id', 2) 
             ->order_by('nombre', 'ASC')
             ->get()->result();
     }
@@ -97,16 +95,15 @@ class M_solicitudP extends CI_Model
     // PARA EDITAR LA SOLICITUD
     public function obtener_para_editar($id_solicitud, $profesor_id)
     {
-        // Traer solicitud + archivo (si existe)
         $this->db->select("
-        s.id_solicitud,
-        s.director_id,
-        s.tipo_solicitud_id,
-        s.referencia,
-        s.descripcion,
-        s.estado_actual,
-        da.archivo
-    ");
+            s.id_solicitud,
+            s.director_id,
+            s.tipo_solicitud_id,
+            s.referencia,
+            s.descripcion,
+            s.estado_actual,
+            da.archivo
+        ");
         $this->db->from('solicitud s');
         $this->db->join('documento_adjunto da', 'da.solicitud_id = s.id_solicitud', 'left');
         $this->db->where('s.id_solicitud', (int)$id_solicitud);
@@ -127,7 +124,6 @@ class M_solicitudP extends CI_Model
 
     public function upsert_documento($id_solicitud, $ruta_web, $tipo_archivo)
     {
-        // Si ya existe documento para esa solicitud → update; si no → insert
         $existe = $this->db->select('id_documento_adjunto')
             ->from('documento_adjunto')
             ->where('solicitud_id', (int)$id_solicitud)
@@ -152,15 +148,14 @@ class M_solicitudP extends CI_Model
 
 
     public function resumen_estados_profesor($profesor_id)
-{
-    $sql = "
-      SELECT estado_actual, COUNT(*)::int AS total
-      FROM solicitud
-      WHERE activo = true
-        AND profesor_id = ?
-      GROUP BY estado_actual
-    ";
-    return $this->db->query($sql, [$profesor_id])->result_array();
-}
-
+    {
+        $sql = "
+            SELECT estado_actual, COUNT(*)::int AS total
+            FROM solicitud
+            WHERE activo = true
+                AND profesor_id = ?
+            GROUP BY estado_actual
+        ";
+        return $this->db->query($sql, [$profesor_id])->result_array();
+    }
 }

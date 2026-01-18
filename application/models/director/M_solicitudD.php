@@ -22,7 +22,6 @@ class M_solicitudD extends CI_Model
         $this->db->where('s.director_id', (int)$director_id);
         $this->db->where('s.activo', true);
 
-        // más reciente primero (puedes cambiar a ASC si quieres)
         $this->db->order_by('s.fecha_registro', 'DESC');
 
         return $this->db->get()->result();
@@ -73,26 +72,24 @@ class M_solicitudD extends CI_Model
 
 
     public function get_profesor_id($id_solicitud)
-{
-    return $this->db->select('profesor_id')
-        ->from('solicitud')
-        ->where('id_solicitud', (int)$id_solicitud)
-        ->where('activo', true)
-        ->get()
-        ->row_array();
-}
+    {
+        return $this->db->select('profesor_id')
+            ->from('solicitud')
+            ->where('id_solicitud', (int)$id_solicitud)
+            ->where('activo', true)
+            ->get()
+            ->row_array();
+    }
 
-public function resumen_estados_director($director_id)
-{
-    $sql = "
-      SELECT estado_actual, COUNT(*)::int AS total
-      FROM solicitud
-      WHERE activo = true
-        AND director_id = ?
-      GROUP BY estado_actual
-    ";
-    return $this->db->query($sql, [$director_id])->result_array();
-}
-
-
+    public function resumen_estados_director($director_id)
+    {
+        $sql = "
+            SELECT estado_actual, COUNT(*)::int AS total
+            FROM solicitud
+            WHERE activo = true
+                AND director_id = ?
+            GROUP BY estado_actual
+        ";
+        return $this->db->query($sql, [$director_id])->result_array();
+    }
 }

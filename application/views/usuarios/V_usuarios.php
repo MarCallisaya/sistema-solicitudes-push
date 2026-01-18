@@ -53,7 +53,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <!-- Nombre -->
+
                         <div class="col-md-4">
                             <label>Nombre</label>
                             <input type="text" name="nombre" id="nombre" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')" required>
@@ -69,25 +69,21 @@
                             <input type="text" name="apellido_materno" id="apellido_materno" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                         </div>
 
-                        <!-- CI -->
                         <div class="col-md-4 mt-2">
                             <label>CI</label>
                             <input type="text" name="ci" id="ci" class="form-control" oninput="this.value = this.value.replace(/[^0-9a-zA-Z\s]/g, '')">
                         </div>
 
-                        <!-- Teléfono -->
                         <div class="col-md-4 mt-2">
                             <label>Teléfono</label>
                             <input type="text" name="telefono" id="telefono" class="form-control" oninput="this.value = this.value.replace(/[^0-9\+\s]/g, '')">
                         </div>
 
-                        <!-- Email -->
                         <div class="col-md-4 mt-2">
                             <label>Email</label>
                             <input type="email" name="email" id="email" class="form-control">
                         </div>
 
-                        <!-- Rol -->
                         <div class="col-md-6 mt-2">
                             <label>Rol</label>
                             <select name="rol_id" id="rol_id" class="form-control" required>
@@ -100,7 +96,6 @@
                             </select>
                         </div>
 
-                        <!-- Unidad Educativa -->
                         <div class="col-md-6 mt-2">
                             <label>Unidad Educativa</label>
                             <select name="unidad_educativa_id" id="unidad_educativa_id" class="form-control" required>
@@ -113,13 +108,12 @@
                             </select>
                         </div>
 
-                        <!-- Usuario -->
                         <div class="col-md-6 mt-2">
                             <label>Usuario</label>
                             <input type="text" name="username" id="username" class="form-control" required>
                         </div>
 
-                        <!-- Password -->
+
                         <div class="col-md-6 mt-2">
                             <label>Contraseña</label>
                             <input type="password" name="password" id="password" class="form-control" required>

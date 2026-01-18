@@ -36,9 +36,7 @@ class M_solicitudA extends CI_Model
             s.descripcion,
             to_char(s.fecha_registro, 'DD \"de\" TMMonth YYYY HH24:MI') AS fecha_formato,
             CONCAT(p.nombre,' ',p.apellido_paterno,' ',COALESCE(p.apellido_materno,'')) AS profesor_nombre,
-            CONCAT(d.nombre,' ',d.apellido_paterno,' ',COALESCE(d.apellido_materno,'')) AS director_nombre
-            
-
+            CONCAT(d.nombre,' ',d.apellido_paterno,' ',COALESCE(d.apellido_materno,'')) AS director_nombre           
         ");
         $this->db->from('solicitud s');
         $this->db->join('usuario p', 'p.id_usuario = s.profesor_id', 'inner');
@@ -92,14 +90,13 @@ class M_solicitudA extends CI_Model
     }
 
     public function resumen_estados_admin()
-{
-    $sql = "
-      SELECT estado_actual, COUNT(*)::int AS total
-      FROM solicitud
-      WHERE activo = true
-      GROUP BY estado_actual
-    ";
-    return $this->db->query($sql)->result_array();
-}
-
+    {
+        $sql = "
+            SELECT estado_actual, COUNT(*)::int AS total
+            FROM solicitud
+            WHERE activo = true
+            GROUP BY estado_actual
+        ";
+        return $this->db->query($sql)->result_array();
+    }
 }

@@ -26,7 +26,7 @@ class C_solicitudP extends CI_Controller
         $this->load->view('includes/footer');
     }
 
-    // ✅ DataTable: listar solicitudes del profesor
+    // listar solicitudes 
     public function ajax_listar()
     {
         if (!$this->input->is_ajax_request()) {
@@ -39,23 +39,20 @@ class C_solicitudP extends CI_Controller
         $data = [];
         foreach ($rows as $r) {
 
-            // Archivo: Abrir / —
             $archivo_html = '—';
             if (!empty($r->archivo)) {
-                // si guardas "/uploads/solicitudes/xxx.pdf" o "uploads/solicitudes/xxx.pdf"
                 $path = ltrim($r->archivo, '/');
                 $url  = base_url($path);
 
                 $archivo_html = '<a href="' . $url . '" target="_blank">Abrir</a>';
             }
 
-            // Acciones: Ver + Editar (solo pendiente)
-            $btn_ver = '<button class="btn btn-sm btn-info btnVer" data-id="' . (int)$r->id_solicitud . '"><i class="fa fa-eye"></i>
-</button>';
+            $btn_ver = '<button class="btn btn-sm btn-info btnVer" data-id="' . (int)$r->id_solicitud . '"><i class="fa fa-eye"></i></button>';
 
             $is_pendiente = (strtoupper(trim($r->estado_actual)) === 'PENDIENTE');
             $btn_editar = $is_pendiente
                 ? '<button class="btn btn-sm btn-primary btnEditar" data-id="' . (int)$r->id_solicitud . '"><i class="fa fa-pencil"></i></button>'
+
                 : '<button class="btn btn-sm btn-secondary" disabled><i class="fa fa-pencil"></i></button>';
 
             $acciones = $btn_ver . ' ' . $btn_editar;
@@ -130,7 +127,6 @@ class C_solicitudP extends CI_Controller
         $referencia  = trim($this->input->post('referencia', true));
         $descripcion = trim($this->input->post('descripcion', true));
 
-        // Validación mínima
         if ($director_id <= 0 || $tipo_id <= 0 || $descripcion === '') {
             echo json_encode([
                 'status' => false,
@@ -182,12 +178,12 @@ class C_solicitudP extends CI_Controller
 
             $up = $this->upload->data();
 
-            // guardamos ruta web (como dijiste)
+
             $ruta_web = '/uploads/solicitudes/' . $up['file_name'];
 
             $data_documento = [
                 'archivo' => $ruta_web,
-                'tipo_archivo' => $up['file_ext'], // ej: .pdf
+                'tipo_archivo' => $up['file_ext'], 
                 'descripcion' => 'Adjunto de solicitud',
                 'fecha_registro' => date('Y-m-d H:i:s'),
                 'fecha_actualizacion' => date('Y-m-d H:i:s'),
@@ -201,14 +197,14 @@ class C_solicitudP extends CI_Controller
             return;
         }
 
-        /* ====== REGLA 1: Push a Director + Admins ====== */
+        /* REGLA 1 Push a Director + Admins  */
         $this->load->model('M_push');
         $this->load->library('Fcm_service');
 
         // Admins (rol 3)
-        $admins = $this->M_push->get_admin_ids(); // debe devolver array de IDs
+        $admins = $this->M_push->get_admin_ids(); 
 
-        // Lista final: director + admins, sin duplicados y sin ceros
+        // Lista final- director + admins
         $destinatarios = array_filter(array_unique(array_merge([$director_id], $admins)));
 
         $titulo = 'Nueva solicitud';
@@ -224,7 +220,7 @@ class C_solicitudP extends CI_Controller
                 (int)$id
             );
         }
-        /* ====== FIN REGLA 1 ====== */
+        /* FIN REGLA 1 */
 
         echo json_encode(['status' => true, 'message' => 'Solicitud registrada correctamente.']);
     }
@@ -271,7 +267,7 @@ class C_solicitudP extends CI_Controller
             return;
         }
 
-        // 1) Actualizar solicitud (solo si PENDIENTE)
+        // Actualizar solicitud solo si PENDIENTE
         $data_solicitud = [
             'director_id' => $director_id,
             'tipo_solicitud_id' => $tipo_id,
@@ -287,7 +283,6 @@ class C_solicitudP extends CI_Controller
             return;
         }
 
-        // 2) Si sube archivo → reemplazar (upsert)
         if (!empty($_FILES['archivo']['name'])) {
             $upload_path = FCPATH . 'uploads/solicitudes/';
             if (!is_dir($upload_path)) {
@@ -317,26 +312,25 @@ class C_solicitudP extends CI_Controller
     }
 
     public function ajax_resumen_estados()
-{
-    if (!$this->input->is_ajax_request()) show_404();
+    {
+        if (!$this->input->is_ajax_request()) show_404();
 
-    $profesor_id = (int)$this->session->userdata('id_usuario');
+        $profesor_id = (int)$this->session->userdata('id_usuario');
 
-    $rows = $this->M_solicitudP->resumen_estados_profesor($profesor_id);
+        $rows = $this->M_solicitudP->resumen_estados_profesor($profesor_id);
 
-    $out = [
-        'PENDIENTE'   => 0,
-        'EN_REVISION' => 0,
-        'ACEPTADO'    => 0,
-        'RECHAZADO'   => 0
-    ];
+        $out = [
+            'PENDIENTE'   => 0,
+            'EN_REVISION' => 0,
+            'ACEPTADO'    => 0,
+            'RECHAZADO'   => 0
+        ];
 
-    foreach ($rows as $r) {
-        $k = strtoupper(trim($r['estado_actual']));
-        if (isset($out[$k])) $out[$k] = (int)$r['total'];
+        foreach ($rows as $r) {
+            $k = strtoupper(trim($r['estado_actual']));
+            if (isset($out[$k])) $out[$k] = (int)$r['total'];
+        }
+
+        echo json_encode(['status' => true, 'data' => $out, 'total' => array_sum($out)]);
     }
-
-    echo json_encode(['status' => true, 'data' => $out, 'total' => array_sum($out)]);
-}
-
 }

@@ -1,4 +1,5 @@
 <style>
+  /* Colores de los estados */
   .badge-estado {
     display: inline-flex;
     align-items: center;
@@ -34,7 +35,7 @@
     background: #6c757d;
   }
 
-
+  /* Colores del total de las solicitudes por estados */
   .sol-resumen {
     display: flex;
     align-items: center;
@@ -270,6 +271,9 @@
       return setTimeout(initSolicitudesDirector, 50);
     }
 
+    var $ = window.jQuery;
+
+    //Funcion para los colores del total de la solicitudes por estados
     function cargarResumenAdmin() {
       $.getJSON(BASE_URL + "director/C_solicitudD/ajax_resumen_estados", function(res) {
         if (!res || !res.status) return;
@@ -281,9 +285,7 @@
       });
     }
 
-
-    var $ = window.jQuery;
-
+    //Funcion para los colores de los estados
     function badgeEstado(estado) {
       var e = (estado || '').toString().toUpperCase();
       var cls = 'bg-otro';
@@ -311,6 +313,8 @@
             responsive: true
           });
         }*/
+
+    //Listar
     if (!$.fn.dataTable.isDataTable('#datatable_dir')) {
       $('#datatable_dir').DataTable({
         ajax: {

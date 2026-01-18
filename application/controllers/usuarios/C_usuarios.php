@@ -91,7 +91,6 @@ class C_usuarios extends CI_Controller
             'username'         => $this->input->post('username'),
         ];
 
-        // password opcional
         $pass = $this->input->post('password');
         if (!empty($pass)) {
             $data['password'] = password_hash($pass, PASSWORD_DEFAULT);
@@ -119,8 +118,6 @@ class C_usuarios extends CI_Controller
         }
 
         $ok = $this->M_usuarios->soft_delete_usuario($id_usuario);
-
-        // Mostrar error real de BD si hubiera
         $err = $this->db->error();
         if (!empty($err['code'])) {
             echo json_encode(['status' => false, 'msg' => $err['message']]);
