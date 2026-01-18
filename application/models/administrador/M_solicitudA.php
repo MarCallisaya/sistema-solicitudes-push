@@ -90,4 +90,16 @@ class M_solicitudA extends CI_Model
 
         return $this->db->affected_rows();
     }
+
+    public function resumen_estados_admin()
+{
+    $sql = "
+      SELECT estado_actual, COUNT(*)::int AS total
+      FROM solicitud
+      WHERE activo = true
+      GROUP BY estado_actual
+    ";
+    return $this->db->query($sql)->result_array();
+}
+
 }

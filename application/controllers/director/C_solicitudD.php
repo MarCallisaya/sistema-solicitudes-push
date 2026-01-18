@@ -44,7 +44,13 @@ class C_solicitudD extends CI_Controller
             $btn_estado = '<button class="btn btn-sm btn-primary btnEstado" data-id="'.(int)$r->id_solicitud.'" data-estado="'.htmlspecialchars($r->estado_actual).'"><i class="fa fa-check-circle"></i></button>';
             $btn_obs    = '<button class="btn btn-sm btn-warning btnObs" data-id="'.(int)$r->id_solicitud.'" data-obs="'.htmlspecialchars($r->observaciones ?? '').'"><i class="fa fa-pencil"></i></button>';
 
-            $acciones = $btn_estado . ' ' . $btn_obs;
+            //$acciones = $btn_estado . ' ' . $btn_obs;
+            $acciones = '
+            <div class="d-flex gap-1 justify-content-center">
+                '.$btn_estado.'
+                '.$btn_obs.'
+            </div>';
+
 
             $data[] = [
                 $btn_ver,
@@ -146,4 +152,28 @@ class C_solicitudD extends CI_Controller
             'message' => $ok ? 'Observación guardada' : 'No se pudo guardar'
         ]);
     }
+
+    public function ajax_resumen_estados()
+{
+    if (!$this->input->is_ajax_request()) show_404();
+
+    $director_id = (int)$this->session->userdata('id_usuario');
+
+    $rows = $this->M_solicitudD->resumen_estados_director($director_id);
+
+    $out = [
+        'PENDIENTE'   => 0,
+        'EN_REVISION' => 0,
+        'ACEPTADO'    => 0,
+        'RECHAZADO'   => 0
+    ];
+
+    foreach ($rows as $r) {
+        $k = strtoupper(trim($r['estado_actual']));
+        if (isset($out[$k])) $out[$k] = (int)$r['total'];
+    }
+
+    echo json_encode(['status' => true, 'data' => $out, 'total' => array_sum($out)]);
+}
+
 }

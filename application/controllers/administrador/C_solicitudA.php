@@ -164,4 +164,30 @@ class C_solicitudA extends CI_Controller
             'message' => 'No se desactivó (no encontrada o ya inactiva). DB: ' . ($err['message'] ?? 'sin error')
         ]);
     }
+
+
+    public function ajax_resumen_estados()
+{
+    if (!$this->input->is_ajax_request()) show_404();
+
+    $rows = $this->M_solicitudA->resumen_estados_admin();
+
+    $out = [
+        'PENDIENTE'   => 0,
+        'EN_REVISION' => 0,
+        'ACEPTADO'    => 0,
+        'RECHAZADO'   => 0
+    ];
+
+    foreach ($rows as $r) {
+        $k = strtoupper(trim($r['estado_actual']));
+        if (isset($out[$k])) $out[$k] = (int)$r['total'];
+    }
+
+    $total = array_sum($out);
+
+    echo json_encode(['status' => true, 'data' => $out, 'total' => $total]);
+}
+
+
 }

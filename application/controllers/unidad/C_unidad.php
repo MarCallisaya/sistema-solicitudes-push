@@ -95,4 +95,21 @@ class C_unidad extends CI_Controller
 
         echo json_encode(['status' => (bool)$ok]);
     }
+
+    // Para ver los docentes de cada unidad 
+    public function ajax_docentes($unidad_id)
+{
+    if (!$this->input->is_ajax_request()) show_404();
+
+    $unidad_id = (int)$unidad_id;
+    if ($unidad_id <= 0) {
+        echo json_encode(['status' => false, 'message' => 'ID inválido']);
+        return;
+    }
+
+    $rows = $this->M_unidad->get_docentes_by_unidad($unidad_id);
+
+    echo json_encode(['status' => true, 'data' => $rows]);
+}
+
 }

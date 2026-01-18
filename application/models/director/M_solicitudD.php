@@ -82,4 +82,17 @@ class M_solicitudD extends CI_Model
         ->row_array();
 }
 
+public function resumen_estados_director($director_id)
+{
+    $sql = "
+      SELECT estado_actual, COUNT(*)::int AS total
+      FROM solicitud
+      WHERE activo = true
+        AND director_id = ?
+      GROUP BY estado_actual
+    ";
+    return $this->db->query($sql, [$director_id])->result_array();
+}
+
+
 }

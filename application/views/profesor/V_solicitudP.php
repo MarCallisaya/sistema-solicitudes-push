@@ -1,3 +1,101 @@
+<style>
+    .badge-estado {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 120px;
+        height: 28px;
+        padding: 0 10px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 999px;
+        color: #fff;
+        letter-spacing: .4px;
+        text-transform: uppercase;
+    }
+
+    .bg-pendiente {
+        background: #f0ad4e;
+    }
+
+    .bg-revision {
+        background: #5bc0de;
+    }
+
+    .bg-aceptado {
+        background: #5cb85c;
+    }
+
+    .bg-rechazado {
+        background: #d9534f;
+    }
+
+    .bg-otro {
+        background: #6c757d;
+    }
+
+
+    .sol-resumen {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 12px;
+        border: 1px solid rgba(0, 0, 0, .06);
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    .sol-resumen-left {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+        min-width: 150px;
+    }
+
+    .sol-titulo {
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .sol-total {
+        font-size: 12px;
+        color: #6c757d;
+    }
+
+    .sol-resumen-right {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .sol-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .sol-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .sol-label {
+        color: #495057;
+        font-weight: 600;
+    }
+
+    .sol-num {
+        font-weight: 800;
+        margin-left: 2px;
+    }
+</style>
+
 <div class="content-body">
     <div class="container-fluid">
         <div class="row">
@@ -15,6 +113,41 @@
                     </div>
 
                     <div class="card-body">
+
+                        <div class="sol-resumen mb-2">
+                            <div class="sol-resumen-left">
+                                <div class="sol-total">Total: <span id="r_total">0</span></div>
+                            </div>
+
+                            <div class="sol-resumen-right">
+                                <div class="sol-item">
+                                    <span class="sol-dot bg-revision"></span>
+                                    <span class="sol-label">En Revisión</span>
+                                    <span class="sol-num" id="r_revision">0</span>
+                                </div>
+
+                                <div class="sol-item">
+                                    <span class="sol-dot bg-aceptado"></span>
+                                    <span class="sol-label">Aceptadas</span>
+                                    <span class="sol-num" id="r_aceptado">0</span>
+                                </div>
+
+                                <div class="sol-item">
+                                    <span class="sol-dot bg-rechazado"></span>
+                                    <span class="sol-label">Rechazadas</span>
+                                    <span class="sol-num" id="r_rechazado">0</span>
+                                </div>
+
+                                <div class="sol-item">
+                                    <span class="sol-dot bg-pendiente"></span>
+                                    <span class="sol-label">Pendientes</span>
+                                    <span class="sol-num" id="r_pendiente">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
                         <div class="table-responsive">
                             <table id="datatable_prof" class="display" style="min-width: 845px">
                                 <thead>
@@ -122,13 +255,13 @@
                         <div class="form-group col-md-6">
                             <label>Referencia</label>
                             <input type="text" name="referencia" id="referencia" class="form-control"
-                                maxlength="200" placeholder="Ej: Solicitud de permiso">
+                                maxlength="200" placeholder="Ej: Solicitud de permiso"  oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\/\-,\.:]/g, '')">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Descripción *</label>
-                        <textarea name="descripcion" id="descripcion" class="form-control" rows="5" required></textarea>
+                        <textarea name="descripcion" id="descripcion" class="form-control" rows="5" required oninput="this.value = this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\/\-_,\.:]/g, '')"></textarea>
                     </div>
 
                     <div class="form-row">
@@ -185,13 +318,13 @@
 
                         <div class="form-group col-md-6">
                             <label>Referencia</label>
-                            <input type="text" name="referencia" id="edit_referencia" class="form-control" maxlength="200">
+                            <input type="text" name="referencia" id="edit_referencia" class="form-control" maxlength="200" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\/\-,\.:]/g, '')">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Descripción *</label>
-                        <textarea name="descripcion" id="edit_descripcion" class="form-control" rows="5" required></textarea>
+                        <textarea name="descripcion" id="edit_descripcion" class="form-control" rows="5" required oninput="this.value = this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\/\-_,\.:]/g, '')"></textarea>
                     </div>
 
                     <div class="form-row">
@@ -242,8 +375,34 @@
 
         var $ = window.jQuery;
 
+
+        function cargarResumenAdmin() {
+            $.getJSON(BASE_URL + "profesor/C_solicitudP/ajax_resumen_estados", function(res) {
+                if (!res || !res.status) return;
+                $('#r_total').text(res.total || 0);
+                $('#r_pendiente').text(res.data.PENDIENTE || 0);
+                $('#r_revision').text(res.data.EN_REVISION || 0);
+                $('#r_aceptado').text(res.data.ACEPTADO || 0);
+                $('#r_rechazado').text(res.data.RECHAZADO || 0);
+            });
+        }
+
+
+        function badgeEstado(estado) {
+            var e = (estado || '').toString().toUpperCase();
+            var cls = 'bg-otro';
+
+            if (e === 'PENDIENTE') cls = 'bg-pendiente';
+            else if (e === 'EN_REVISION') cls = 'bg-revision';
+            else if (e === 'ACEPTADO') cls = 'bg-aceptado';
+            else if (e === 'RECHAZADO') cls = 'bg-rechazado';
+
+            return '<span class="badge-estado ' + cls + '">' + e + '</span>';
+        }
+
+
         // ✅ 1) Inicializar DataTable SOLO una vez
-        if (!$.fn.dataTable.isDataTable('#datatable_prof')) {
+        /*if (!$.fn.dataTable.isDataTable('#datatable_prof')) {
             console.log('DataTable solicitudes inicializando...');
 
             $('#datatable_prof').DataTable({
@@ -257,7 +416,32 @@
                 ],
                 responsive: true
             });
+        }*/
+        if (!$.fn.dataTable.isDataTable('#datatable_prof')) {
+            console.log('DataTable solicitudes inicializando...');
+
+            $('#datatable_prof').DataTable({
+                ajax: {
+                    url: BASE_URL + "profesor/C_solicitudP/ajax_listar",
+                    type: "GET",
+                    dataSrc: "data"
+                },
+                order: [
+                    [5, 'desc']
+                ],
+                responsive: true,
+                columnDefs: [{
+                    targets: 4, // Estado
+                    className: 'text-center',
+                    render: function(data) {
+                        return badgeEstado(data);
+                    }
+                }]
+            });
+
+            cargarResumenAdmin();
         }
+
 
         // ✅ 2) VER (carta)
         $(document).off('click', '.btnVer').on('click', '.btnVer', function() {
@@ -356,6 +540,7 @@
 
                     // ✅ recargar tabla
                     $('#datatable_prof').DataTable().ajax.reload(null, false);
+                    cargarResumenAdmin();
                 },
                 error: function() {
                     if (window.Swal) Swal.fire('Error', 'Error del servidor al guardar', 'error');
@@ -367,105 +552,105 @@
             });
         });
 
-        
-    //PARA EDITAR LA SOLICITUD
-    // ✅ Click Editar -> cargar datos y abrir modal
-    $(document).off('click', '.btnEditar').on('click', '.btnEditar', function() {
-        var id = $(this).data('id');
 
-        // cargar selects (reutilizamos ajax_form_data)
-        $.ajax({
-            url: BASE_URL + "profesor/C_solicitudP/ajax_form_data",
-            type: "GET",
-            dataType: "json",
-            success: function(resFD) {
-                if (!resFD.status) {
-                    if (window.Swal) Swal.fire('Error', 'No se pudo cargar datos', 'error');
-                    return;
-                }
+        //PARA EDITAR LA SOLICITUD
+        // ✅ Click Editar -> cargar datos y abrir modal
+        $(document).off('click', '.btnEditar').on('click', '.btnEditar', function() {
+            var id = $(this).data('id');
 
-                var optsD = '<option value="">Seleccione...</option>';
-                (resFD.directores || []).forEach(function(d) {
-                    optsD += '<option value="' + d.id_usuario + '">' + d.nombre_completo + '</option>';
-                });
-                $('#edit_director_id').html(optsD);
-
-                var optsT = '<option value="">Seleccione...</option>';
-                (resFD.tipos || []).forEach(function(t) {
-                    optsT += '<option value="' + t.id_tipo_solicitud + '">' + t.nombre + '</option>';
-                });
-                $('#edit_tipo_solicitud_id').html(optsT);
-
-                // ahora traer datos de la solicitud
-                $.ajax({
-                    url: BASE_URL + "profesor/C_solicitudP/ajax_get_editar/" + id,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(res) {
-                        if (!res.status) {
-                            if (window.Swal) Swal.fire('Error', res.message || 'No se pudo cargar', 'error');
-                            return;
-                        }
-
-                        var d = res.data;
-
-                        $('#edit_id_solicitud').val(d.id_solicitud);
-                        $('#edit_director_id').val(d.director_id);
-                        $('#edit_tipo_solicitud_id').val(d.tipo_solicitud_id);
-                        $('#edit_referencia').val(d.referencia || '');
-                        $('#edit_descripcion').val(d.descripcion || '');
-
-                        if (d.archivo) {
-                            $('#edit_archivo_actual').html('Archivo actual: <a href="' + (BASE_URL + d.archivo.replace(/^\/+/, '')) + '" target="_blank">Abrir</a>');
-                        } else {
-                            $('#edit_archivo_actual').text('Archivo actual: —');
-                        }
-
-                        $('#modalEditarSolicitud').modal('show');
+            // cargar selects (reutilizamos ajax_form_data)
+            $.ajax({
+                url: BASE_URL + "profesor/C_solicitudP/ajax_form_data",
+                type: "GET",
+                dataType: "json",
+                success: function(resFD) {
+                    if (!resFD.status) {
+                        if (window.Swal) Swal.fire('Error', 'No se pudo cargar datos', 'error');
+                        return;
                     }
-                });
-            }
-        });
-    });
 
-    // ✅ Submit actualizar
-    $('#formSolicitudEditar').off('submit').on('submit', function(e) {
-        e.preventDefault();
+                    var optsD = '<option value="">Seleccione...</option>';
+                    (resFD.directores || []).forEach(function(d) {
+                        optsD += '<option value="' + d.id_usuario + '">' + d.nombre_completo + '</option>';
+                    });
+                    $('#edit_director_id').html(optsD);
 
-        var formData = new FormData(this);
+                    var optsT = '<option value="">Seleccione...</option>';
+                    (resFD.tipos || []).forEach(function(t) {
+                        optsT += '<option value="' + t.id_tipo_solicitud + '">' + t.nombre + '</option>';
+                    });
+                    $('#edit_tipo_solicitud_id').html(optsT);
 
-        $('#btnActualizarSolicitud').prop('disabled', true).text('Actualizando...');
+                    // ahora traer datos de la solicitud
+                    $.ajax({
+                        url: BASE_URL + "profesor/C_solicitudP/ajax_get_editar/" + id,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(res) {
+                            if (!res.status) {
+                                if (window.Swal) Swal.fire('Error', res.message || 'No se pudo cargar', 'error');
+                                return;
+                            }
 
-        $.ajax({
-            url: BASE_URL + "profesor/C_solicitudP/ajax_actualizar",
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            dataType: "json",
-            success: function(res) {
-                if (!res.status) {
-                    if (window.Swal) Swal.fire('Error', res.message || 'No se pudo actualizar', 'error');
-                    else alert(res.message || 'No se pudo actualizar');
-                    return;
+                            var d = res.data;
+
+                            $('#edit_id_solicitud').val(d.id_solicitud);
+                            $('#edit_director_id').val(d.director_id);
+                            $('#edit_tipo_solicitud_id').val(d.tipo_solicitud_id);
+                            $('#edit_referencia').val(d.referencia || '');
+                            $('#edit_descripcion').val(d.descripcion || '');
+
+                            if (d.archivo) {
+                                $('#edit_archivo_actual').html('Archivo actual: <a href="' + (BASE_URL + d.archivo.replace(/^\/+/, '')) + '" target="_blank">Abrir</a>');
+                            } else {
+                                $('#edit_archivo_actual').text('Archivo actual: —');
+                            }
+
+                            $('#modalEditarSolicitud').modal('show');
+                        }
+                    });
                 }
-
-                if (window.Swal) Swal.fire('Éxito', res.message || 'Actualizado', 'success');
-
-                $('#modalEditarSolicitud').modal('hide');
-                $('#datatable_prof').DataTable().ajax.reload(null, false);
-            },
-            error: function() {
-                if (window.Swal) Swal.fire('Error', 'Error del servidor al actualizar', 'error');
-                else alert('Error del servidor al actualizar');
-            },
-            complete: function() {
-                $('#btnActualizarSolicitud').prop('disabled', false).text('Actualizar');
-            }
+            });
         });
-    });
+
+        // ✅ Submit actualizar
+        $('#formSolicitudEditar').off('submit').on('submit', function(e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            $('#btnActualizarSolicitud').prop('disabled', true).text('Actualizando...');
+
+            $.ajax({
+                url: BASE_URL + "profesor/C_solicitudP/ajax_actualizar",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                success: function(res) {
+                    if (!res.status) {
+                        if (window.Swal) Swal.fire('Error', res.message || 'No se pudo actualizar', 'error');
+                        else alert(res.message || 'No se pudo actualizar');
+                        return;
+                    }
+
+                    if (window.Swal) Swal.fire('Éxito', res.message || 'Actualizado', 'success');
+
+                    $('#modalEditarSolicitud').modal('hide');
+                    $('#datatable_prof').DataTable().ajax.reload(null, false);
+
+                    cargarResumenAdmin();
+                },
+                error: function() {
+                    if (window.Swal) Swal.fire('Error', 'Error del servidor al actualizar', 'error');
+                    else alert('Error del servidor al actualizar');
+                },
+                complete: function() {
+                    $('#btnActualizarSolicitud').prop('disabled', false).text('Actualizar');
+                }
+            });
+        });
 
     })();
-
-
 </script>

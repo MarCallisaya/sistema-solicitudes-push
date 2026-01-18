@@ -315,4 +315,28 @@ class C_solicitudP extends CI_Controller
 
         echo json_encode(['status' => true, 'message' => 'Solicitud actualizada correctamente.']);
     }
+
+    public function ajax_resumen_estados()
+{
+    if (!$this->input->is_ajax_request()) show_404();
+
+    $profesor_id = (int)$this->session->userdata('id_usuario');
+
+    $rows = $this->M_solicitudP->resumen_estados_profesor($profesor_id);
+
+    $out = [
+        'PENDIENTE'   => 0,
+        'EN_REVISION' => 0,
+        'ACEPTADO'    => 0,
+        'RECHAZADO'   => 0
+    ];
+
+    foreach ($rows as $r) {
+        $k = strtoupper(trim($r['estado_actual']));
+        if (isset($out[$k])) $out[$k] = (int)$r['total'];
+    }
+
+    echo json_encode(['status' => true, 'data' => $out, 'total' => array_sum($out)]);
+}
+
 }

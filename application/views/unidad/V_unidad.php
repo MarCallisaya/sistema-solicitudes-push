@@ -19,7 +19,8 @@
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Descripcigit ón</th>
+                                        <th>Descripcion</th>
+                                        <th>Docentes</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -51,12 +52,12 @@
 
                 <div class="modal-body">
                     <label>Nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control" required>
+                    <input type="text" name="nombre" id="nombre" class="form-control" required oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                 </div>
 
                 <div class="modal-body">
                     <label class="mt-2">Descripción</label>
-                    <textarea name="descripcion" id="descripcion" class="form-control" rows="3"></textarea>
+                    <textarea name="descripcion" id="descripcion" class="form-control" rows="3" oninput="this.value = this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\/\-,\.]/g, '')"></textarea>
                 </div>
 
 
@@ -71,6 +72,46 @@
         </div>
     </div>
 </div>
+
+
+
+<!-- MODAL PARA VER A LOS DOCENTES -->
+<div class="modal fade" id="modalDocentes" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Docentes asignados</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-sm" id="tablaDocentes">
+                        <thead>
+                            <tr>
+                                <th>Docente</th>
+                                <th>CI</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody id="docentesBody"></tbody>
+                    </table>
+                </div>
+
+                <div id="docentesEmpty" class="text-muted" style="display:none;">
+                    No hay docentes asignados a esta unidad.
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     (function initUnidadPage() {
@@ -99,13 +140,27 @@
                     url: '<?= base_url("unidad/C_unidad/lista"); ?>',
                     dataSrc: ''
                 },
-                columns: [
-                    {
+                columns: [{
                         data: 'nombre'
                     },
-                    { 
-                        data: 'descripcion' 
+                    {
+                        data: 'descripcion'
                     },
+                    {
+                        data: 'total_docentes',
+                        className: 'text-center',
+                        render: function(n, type, row) {
+                            n = parseInt(n || 0, 10);
+                            const id = row.id_unidad_educativa;
+
+                            return `
+                                <a href="#" class="btnDocentes" data-id="${id}" style="font-weight:700; text-decoration:none;">
+                                    <span class="badge badge-info">${n}</span>
+                                </a>
+                            `;
+                        }
+                    },
+
                     {
                         data: 'id_unidad_educativa',
                         render: function(id) {
@@ -125,6 +180,54 @@
             });
         }
         initDT();
+
+        //MODAL PARA VER A LOS DOCENTES
+       
+
+        $(document).off('click', '.btnDocentes').on('click', '.btnDocentes', function(e) {
+            e.preventDefault();
+
+            const unidadId = $(this).data('id');
+
+            $('#docentesBody').html('');
+            $('#docentesEmpty').hide();
+
+            $.ajax({
+                url: '<?= base_url("unidad/C_unidad/ajax_docentes/"); ?>' + unidadId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(res) {
+                    if (!res || !res.status) {
+                        if (window.Swal) Swal.fire('Error', res.message || 'No se pudo cargar', 'error');
+                        return;
+                    }
+
+                    if (res.data.length === 0) {
+                        $('#docentesEmpty').show();
+                    } else {
+                        let html = '';
+                        res.data.forEach(function(d) {
+                            const nombre = [d.apellido_paterno, d.apellido_materno, d.nombre]
+                                .filter(Boolean).join(' ');
+                            html += `
+                                <tr>
+                                <td>${nombre}</td>
+                                <td>${d.ci || ''}</td>
+                                <td>${d.telefono || ''}</td>
+                                <td>${d.email || ''}</td>
+                                <td>${d.username || ''}</td>
+                                </tr>
+                            `;
+                        });
+                        $('#docentesBody').html(html);
+                    }
+
+                    $('#modalDocentes').modal('show');
+                }
+            });
+        });
+
+
 
         // GUARDAR / ACTUALIZAR
         $('#formUnidad').off('submit').on('submit', function(e) {

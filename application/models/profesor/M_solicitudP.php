@@ -149,4 +149,18 @@ class M_solicitudP extends CI_Model
             return $this->db->insert('documento_adjunto', $data);
         }
     }
+
+
+    public function resumen_estados_profesor($profesor_id)
+{
+    $sql = "
+      SELECT estado_actual, COUNT(*)::int AS total
+      FROM solicitud
+      WHERE activo = true
+        AND profesor_id = ?
+      GROUP BY estado_actual
+    ";
+    return $this->db->query($sql, [$profesor_id])->result_array();
+}
+
 }
