@@ -21,6 +21,7 @@
                         <div class="row no-gutters">
                             <div class="col-xl-12">
                                 <div class="auth-form">
+                                    <h3 class="text-center mb-4">UNIDAD EDUCATIVA KASANI</h3>
                                     <h4 class="text-center mb-4">Iniciar Sesion</h4>
                                     <form action="<?= base_url('C_login/login') ?>" method="post">
                                         <?php if ($this->session->flashdata('error')): ?>

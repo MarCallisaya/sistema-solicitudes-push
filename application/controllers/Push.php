@@ -24,7 +24,7 @@ class Push extends CI_Controller
             show_404();
         }
 
-        // Debes tener sesión activa (ajusta el nombre según tu proyecto)
+        // tener sesión activa 
         $usuario_id = (int) $this->session->userdata('id_usuario');
         if ($usuario_id <= 0) {
             echo json_encode(['status' => false, 'message' => 'No autenticado']);

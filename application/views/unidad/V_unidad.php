@@ -63,8 +63,8 @@
 
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" id="btnUnidadSubmit">Guardar</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnUnidadSubmit">Guardar</button>
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
                 </div>
 
             </form>
@@ -322,11 +322,11 @@
             const id = $(this).data('id');
 
             Swal.fire({
-                title: '¿Desactivar unidad?',
-                text: 'La unidad quedará desactivada.',
+                title: '¿Eliminar unidad?',
+                text: 'La unidad educativa quedará eliminada.',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Sí, desactivar',
+                confirmButtonText: 'Eliminar',
                 cancelButtonText: 'Cancelar'
             }).then(function(result) {
                 const confirmed = (result.isConfirmed === true) || (result.value === true);

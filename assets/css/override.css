@@ -1,0 +1,19 @@
+
+
+/* Aplica negro SOLO al área de contenido */
+.content-body,
+.content-body * {
+  color: #000 !important;
+}
+
+/* DataTables solo dentro del contenido */
+.content-body .dataTables_wrapper,
+.content-body .dataTables_wrapper * {
+  color: #000 !important;
+}
+
+/* Tablas dentro del contenido */
+.content-body .table,
+.content-body .table * {
+  color: #000 !important;
+}

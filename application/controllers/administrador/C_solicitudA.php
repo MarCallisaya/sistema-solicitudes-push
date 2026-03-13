@@ -150,14 +150,14 @@ class C_solicitudA extends CI_Controller
         $afectadas = $this->M_solicitudA->eliminar_logico($id_solicitud);
 
         if ($afectadas > 0) {
-            echo json_encode(['status' => true, 'message' => 'Solicitud desactivada correctamente.']);
+            echo json_encode(['status' => true, 'message' => 'Solicitud eliminada correctamente.']);
             return;
         }
 
         $err = $this->db->error();
         echo json_encode([
             'status'  => false,
-            'message' => 'No se desactivó (no encontrada o ya inactiva). DB: ' . ($err['message'] ?? 'sin error')
+            'message' => 'No se elimino la solicitud: ' . ($err['message'] ?? 'sin error')
         ]);
     }
 

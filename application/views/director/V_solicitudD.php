@@ -219,7 +219,7 @@
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal" type="button">Cerrar</button>
+          <button class="btn btn-dark" data-dismiss="modal" type="button">Cerrar</button>
           <button class="btn btn-primary" type="submit" id="btnGuardarEstado">Guardar</button>
         </div>
       </form>
@@ -245,7 +245,7 @@
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal" type="button">Cerrar</button>
+          <button class="btn btn-dark" data-dismiss="modal" type="button">Cerrar</button>
           <button class="btn btn-primary" type="submit" id="btnGuardarObs">Guardar</button>
         </div>
       </form>

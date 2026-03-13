@@ -200,7 +200,7 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-dark" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
@@ -229,7 +229,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Cerrar</button>
+                    <button class="btn btn-dark" data-dismiss="modal" type="button">Cerrar</button>
                     <button class="btn btn-primary" type="submit" id="btnGuardarEstado">Guardar</button>
                 </div>
             </form>
@@ -255,7 +255,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Cerrar</button>
+                    <button class="btn btn-dark" data-dismiss="modal" type="button">Cerrar</button>
                     <button class="btn btn-primary" type="submit" id="btnGuardarObs">Guardar</button>
                 </div>
             </form>
@@ -435,10 +435,10 @@
 
             Swal.fire({
                 title: '¿Eliminar solicitud?',
-                text: 'Se desactivará la solicitud.',
+                text: 'Se eliminará la solicitud.',
                 type: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Sí, eliminar',
+                confirmButtonText: 'Eliminar',
                 cancelButtonText: 'Cancelar'
             }).then(function(result) {
 

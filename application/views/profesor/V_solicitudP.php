@@ -218,7 +218,7 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-dark" data-dismiss="modal">Cerrar</button>
             </div>
 
         </div>
@@ -252,7 +252,7 @@
                         <div class="form-group col-md-6">
                             <label>Referencia</label>
                             <input type="text" name="referencia" id="referencia" class="form-control"
-                                maxlength="200" placeholder="Ej: Solicitud de permiso" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\/\-,\.:]/g, '')">
+                                maxlength="200" placeholder="Ej: Solicitud de permiso" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\/\-,\.:]/g, '')  .toUpperCase();">
                         </div>
                     </div>
 
@@ -281,7 +281,7 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary" id="btnGuardarSolicitud">Guardar</button>
                 </div>
             </form>
@@ -340,7 +340,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary" id="btnActualizarSolicitud">Actualizar</button>
                 </div>
             </form>
@@ -359,6 +359,11 @@
                                     $this->session->userdata('apellido_paterno') . ' ' .
                                     $this->session->userdata('apellido_materno')
                             )); ?>;
+
+    function toUpper(el) {
+    if (!el) return;
+    el.value = el.value.toUpperCase();
+}
 </script>
 
 

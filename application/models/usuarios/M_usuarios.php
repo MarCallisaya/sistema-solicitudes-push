@@ -17,7 +17,7 @@ class M_usuarios extends CI_Model
             ->result();
     }
 
-    public function get_usuarios()
+    /*public function get_usuarios()
     {
         $this->db->select("
         u.id_usuario,
@@ -37,6 +37,25 @@ class M_usuarios extends CI_Model
             'inner',
             false
         );
+        $this->db->join('unidad_educativa ue', 'ue.id_unidad_educativa = a.unidad_educativa_id');
+        $this->db->where('u.activo = TRUE', null, false);
+
+        return $this->db->get()->result_array();
+    }*/
+    public function get_usuarios()
+    {
+        $this->db->select("
+        u.id_usuario,
+        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS usuario,
+        u.telefono,
+        u.email,
+        r.nombre AS rol,
+        ue.nombre AS unidad
+    ", false);
+
+        $this->db->from('usuario u');
+        $this->db->join('roles r', 'r.id_rol = u.rol_id');
+        $this->db->join('asignacion a', 'a.usuario_id = u.id_usuario AND a.activo = TRUE', 'inner', false);
         $this->db->join('unidad_educativa ue', 'ue.id_unidad_educativa = a.unidad_educativa_id');
         $this->db->where('u.activo = TRUE', null, false);
 

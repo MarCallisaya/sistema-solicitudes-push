@@ -65,15 +65,14 @@ class C_login extends CI_Controller
             return;
         }
 
-        // ✅ Caso 1: contraseña hasheada (lo normal)
+        // contraseña hasheada
+
         if (password_verify($password, $user->password)) {
-
-            // ok
-
+            // acceso correcto
         } else {
-            // ✅ Caso 2 (compatibilidad): usuarios antiguos en texto plano
+            
             if ($password === $user->password) {
-                // Migrar a hash automáticamente
+                
                 $newHash = password_hash($password, PASSWORD_DEFAULT);
                 $this->M_login->updatePasswordHash($user->id_usuario, $newHash);
             } else {
@@ -84,6 +83,8 @@ class C_login extends CI_Controller
         }
 
         // Crear sesión
+
+
         $session = array(
             'id_usuario' => $user->id_usuario,
             'rol_id'     => $user->rol_id,
@@ -96,7 +97,9 @@ class C_login extends CI_Controller
 
         $this->session->set_userdata($session);
 
+
         // Redirección por rol
+
         switch ((int)$user->rol_id) {
             case 1:
                 redirect('profesor/C_solicitudP');
@@ -111,12 +114,23 @@ class C_login extends CI_Controller
                 $this->session->sess_destroy();
                 redirect('C_login');
         }
+
+
     }
 
     public function logout()
     {
-        $this->session->unset_userdata(['id_usuario', 'rol_id', 'nombre', 'apellido_paterno', 'apellido_materno', 'username', 'logged_in']);
+        $this->session->unset_userdata([
+            'id_usuario', 
+            'rol_id', 
+            'nombre', 
+            'apellido_paterno', 
+            'apellido_materno', 
+            'username', 
+            'logged_in'
+        ]);
         $this->session->sess_destroy();
         redirect('C_login');
     }
 }
+

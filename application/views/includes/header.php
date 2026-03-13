@@ -17,6 +17,8 @@
     <!-- Sweetalert -->
     <link href="<?= base_url('assets/vendor/sweetalert2/dist/sweetalert2.min.css'); ?>" rel="stylesheet">
     <link href="<?= base_url('assets/css/style.css'); ?>" rel="stylesheet">
+    <!-- Para las letras de l contenido -->
+    <!--  <link href="<?= base_url('assets/css/override.css'); ?>" rel="stylesheet"> -->
 
 
 </head>

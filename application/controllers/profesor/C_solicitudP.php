@@ -55,7 +55,14 @@ class C_solicitudP extends CI_Controller
 
                 : '<button class="btn btn-sm btn-secondary" disabled><i class="fa fa-pencil"></i></button>';
 
-            $acciones = $btn_ver . ' ' . $btn_editar;
+            //$acciones = $btn_ver . ' ' . $btn_editar;
+            $acciones = '
+                <div class="d-flex align-items-center gap-1" style="white-space:nowrap;">
+                    '.$btn_ver.'
+                    '.$btn_editar.'
+                </div>
+            ';
+
 
             $data[] = [
                 $acciones,
@@ -197,11 +204,11 @@ class C_solicitudP extends CI_Controller
             return;
         }
 
-        /* REGLA 1 Push a Director + Admins  */
+        //  Push a Director + Admins 
         $this->load->model('M_push');
         $this->load->library('Fcm_service');
 
-        // Admins (rol 3)
+        // Admins 
         $admins = $this->M_push->get_admin_ids(); 
 
         // Lista final- director + admins
@@ -220,7 +227,7 @@ class C_solicitudP extends CI_Controller
                 (int)$id
             );
         }
-        /* FIN REGLA 1 */
+        /* FIN */
 
         echo json_encode(['status' => true, 'message' => 'Solicitud registrada correctamente.']);
     }

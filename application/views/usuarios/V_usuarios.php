@@ -22,7 +22,7 @@
                                         <th>Email</th>
                                         <th>Rol</th>
                                         <th>Unidad Educativa</th>
-                                        <th>Ultima Sesion</th>
+                                        
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -56,22 +56,22 @@
 
                         <div class="col-md-4">
                             <label>Nombre</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')" required>
+                            <input type="text" name="nombre" id="nombre" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '') .toUpperCase(); generarCredenciales();" required>
                         </div>
 
                         <div class="col-md-4">
                             <label>Apellido Paterno</label>
-                            <input type="text" name="apellido_paterno" id="apellido_paterno" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
+                            <input type="text" name="apellido_paterno" id="apellido_paterno" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')  .toUpperCase(); generarCredenciales();">
                         </div>
 
                         <div class="col-md-4">
                             <label>Apellido Materno</label>
-                            <input type="text" name="apellido_materno" id="apellido_materno" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
+                            <input type="text" name="apellido_materno" id="apellido_materno" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')  .toUpperCase();">
                         </div>
 
                         <div class="col-md-4 mt-2">
                             <label>CI</label>
-                            <input type="text" name="ci" id="ci" class="form-control" oninput="this.value = this.value.replace(/[^0-9a-zA-Z\s]/g, '')">
+                            <input type="text" name="ci" id="ci" class="form-control" oninput="this.value = this.value.replace(/[^0-9a-zA-Z\s]/g, ''); generarCredenciales();">
                         </div>
 
                         <div class="col-md-4 mt-2">
@@ -122,10 +122,10 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" id="btnUsuarioSubmit" class="btn btn-success">
+                    <button type="submit" id="btnUsuarioSubmit" class="btn btn-primary">
                         Guardar
                     </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">
                         Cancelar
                     </button>
                 </div>
@@ -133,6 +133,39 @@
         </div>
     </div>
 </div>
+
+<script>
+    function toUpper(el) {
+        if (!el) return;
+        el.value = el.value.toUpperCase();
+    }
+
+    function generarCredenciales() {
+
+        const nombre = document.getElementById('nombre').value.trim();
+        const paterno = document.getElementById('apellido_paterno').value.trim();
+        const ci = document.getElementById('ci').value.trim();
+
+        if (!nombre || !paterno) return;
+
+        // username: nombre_apellidopaterno
+        let username = nombre + '_' + paterno;
+        username = username
+            .toLowerCase()
+            .replace(/\s+/g, '');
+
+        document.getElementById('username').value = username;
+
+        // password: nombre + CI
+        if (ci) {
+            let password = (nombre + ci)
+                .toLowerCase()
+                .replace(/\s+/g, '');
+
+            document.getElementById('password').value = password;
+        }
+    }
+</script>
 
 
 <script>
@@ -172,9 +205,7 @@
                 {
                     data: 'unidad'
                 },
-                {
-                    data: 'last_login'
-                },
+
                 {
                     data: 'id_usuario',
                     render: function(data) {
@@ -332,15 +363,15 @@
         }
 
         console.log('JS ELIMINAR LISTO');
-        $(document).off('click', '.btn-del-usu'); 
+        $(document).off('click', '.btn-del-usu');
         $(document).on('click', '.btn-del-usu', function() {
 
             const id = $(this).data('id');
             console.log('CLICK ELIMINAR ID =', id);
 
             Swal.fire({
-                title: '¿Desactivar usuario?',
-                text: 'El usuario quedará desactivado (no se borra).',
+                title: '¿Eliminar usuario?',
+                text: 'El usuario sera eliminado',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Sí, desactivar',

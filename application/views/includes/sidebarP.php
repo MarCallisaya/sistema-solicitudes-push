@@ -34,11 +34,7 @@
                 </a>
             </li>
 
-            <li><a href="<?= site_url('profesor/C_formulario'); ?>" aria-expanded="false">
-                    <i class="icon icon-single-copy-06"></i>
-                    <span class="nav-text">Formulario</span>
-                </a>
-            </li>
+            
 
         </ul>
     </div>
