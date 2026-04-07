@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: sistema-solicitudes-push
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
