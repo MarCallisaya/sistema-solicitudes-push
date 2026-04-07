@@ -33,7 +33,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 
 # PostgreSQL - Base de datos
-application/config/database.php
+
 *.sql
 *.backup
 *.dump
