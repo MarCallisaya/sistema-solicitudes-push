@@ -1,16 +1,12 @@
-FROM php:8.1-cli
+FROM php:8.1-apache
 
-WORKDIR /app
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
 
-COPY . .
+COPY . /var/www/html/
 
-RUN apt-get update && apt-get install -y \
-    unzip git curl
+WORKDIR /var/www/html
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN a2enmod rewrite
 
-RUN composer install
-
-EXPOSE 10000
-
-CMD php -S 0.0.0.0:10000 index.php
+EXPOSE 80
