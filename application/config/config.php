@@ -30,7 +30,8 @@ date_default_timezone_set('America/La_Paz');
 
 
 
-$config['base_url'] = 'http://localhost/proyecto-sistema-push/';
+//$config['base_url'] = 'http://localhost/proyecto-sistema-push/';
+$config['base_url'] = 'https://sistema-solicitudes-push.onrender.com/';
 
 
 /*
