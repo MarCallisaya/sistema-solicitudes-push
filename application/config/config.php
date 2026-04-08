@@ -30,8 +30,10 @@ date_default_timezone_set('America/La_Paz');
 
 
 
-$config['base_url'] = 'http://localhost/proyecto-sistema-push/';
+// $config['base_url'] = 'http://localhost/proyecto-sistema-push/';
 
+// 7/4/26 configuracion para despliegue a la nube
+$config['base_url'] = getenv('APP_BASE_URL') ?: 'http://localhost/proyecto-sistema-push/';
 
 /*
 |--------------------------------------------------------------------------
