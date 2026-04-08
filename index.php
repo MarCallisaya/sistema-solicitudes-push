@@ -56,8 +56,12 @@
 
 //	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
-// 7/4/26 configuracion para despliegue a la nube
+// 8/4/26 configuracion para despliegue a la nube
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
 
+// 7/4/26 configuracion para despliegue a la nube
 define('ENVIRONMENT', getenv('CI_ENV') ?: 'development');
 
 /*

@@ -336,7 +336,10 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/userguide3/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
+//$config['encryption_key'] = '';
+
+// 8/4/26 configuracion para despliegue a la nube
+$config['encryption_key'] = 'kasani_clave_segura_2026_render';
 
 /*
 |--------------------------------------------------------------------------
@@ -415,7 +418,7 @@ $config['sess_save_path'] = sys_get_temp_dir();
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
-$config['cookie_secure'] = TRUE;
+
 /*
 |--------------------------------------------------------------------------
 | Cookie Related Variables
@@ -432,12 +435,24 @@ $config['cookie_secure'] = TRUE;
 |       'cookie_httponly') will also affect sessions.
 |
 */
+
+/*
 $config['cookie_prefix']	= '';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= FALSE;
 $config['cookie_samesite'] 	= 'Lax';
+*/
+
+// 8/4/26 configuracion para despliegue a la nube
+
+$config['cookie_prefix']   = '';
+$config['cookie_domain']   = '';
+$config['cookie_path']     = '/';
+$config['cookie_secure']   = TRUE;
+$config['cookie_httponly'] = TRUE;
+$config['cookie_samesite'] = 'Lax';
 
 /*
 |--------------------------------------------------------------------------
