@@ -64,6 +64,7 @@ if (!window.__PUSH_FCM_INIT__) {
       console.log("FCM TOKEN:", token);
 
       // Enviar token al backend 
+      /*
       const resp = await fetch(window.BASE_URL + "push/guardar_token", {
         method: "POST",
         headers: {
@@ -72,7 +73,6 @@ if (!window.__PUSH_FCM_INIT__) {
         },
         body: "token=" + encodeURIComponent(token)
       });
-
 
       const data = await resp.json();
       console.log("guardar_token =>", data);
@@ -85,7 +85,41 @@ if (!window.__PUSH_FCM_INIT__) {
     } catch (err) {
       console.error("ERROR activarNotificaciones:", err);
       alert("Error activando notificaciones. Revisa consola.");
+    } */
+
+    // Ini 8/4/26 subiendo a un serviddor 
+      const resp = await fetch(window.BASE_URL + "push/guardar_token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: "token=" + encodeURIComponent(token)
+      });
+
+      const raw = await resp.text();
+      console.log("RESPUESTA RAW guardar_token:", raw);
+
+      let data;
+      try {
+        data = JSON.parse(raw);
+      } catch (e) {
+        throw new Error("La respuesta del servidor no es JSON válido: " + raw);
+      }
+
+      console.log("guardar_token =>", data);
+
+      if (data.status) {
+        alert("✅ Notificaciones activadas correctamente.");
+      } else {
+        alert("⚠️ No se pudo guardar el token: " + (data.message || ""));
+      }
+    } catch (err) {
+      console.error("ERROR activarNotificaciones:", err);
+      alert("Error activando notificaciones. Revisa consola.");
     }
+    // fin 8/4/26 subiendo a un serviddor 
+
   };
 
 
