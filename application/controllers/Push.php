@@ -20,9 +20,12 @@ class Push extends CI_Controller
     public function guardar_token()
     {
         // Solo AJAX
+        /*
         if (!$this->input->is_ajax_request()) {
             show_404();
-        }
+        }*/
+        // 8-4-26 para el despliegue 
+        header('Content-Type: application/json; charset=utf-8');    
 
         // tener sesión activa 
         $usuario_id = (int) $this->session->userdata('id_usuario');
