@@ -4,6 +4,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Push extends CI_Controller
 {
 
+    /* 9/4/26 inicio cambiando construct
+
     public function __construct()
     {
         parent::__construct();
@@ -11,6 +13,15 @@ class Push extends CI_Controller
 
         $this->load->library('Fcm_service');
     }
+    9/4/26 fin cambiando construct*/
+
+    // 9/4/26 mejoramiento de push
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('M_push');
+    }
+
     public function ping()
     {
         echo "PUSH OK";
@@ -25,7 +36,7 @@ class Push extends CI_Controller
             show_404();
         }*/
         // 8-4-26 para el despliegue 
-        header('Content-Type: application/json; charset=utf-8');    
+        header('Content-Type: application/json; charset=utf-8');
 
         // tener sesión activa 
         $usuario_id = (int) $this->session->userdata('id_usuario');
@@ -51,6 +62,10 @@ class Push extends CI_Controller
 
     public function enviar_prueba()
     {
+        // 9/4/26 agregando libreria 
+        $this->load->library('Fcm_service');
+        //9/4/26 fin
+
         $usuario_id = (int) $this->session->userdata('id_usuario');
         if ($usuario_id <= 0) {
             echo "No autenticado";
@@ -79,6 +94,10 @@ class Push extends CI_Controller
 
     public function enviar_prueba_core()
     {
+        // 9/4/26 agregando libreria 
+        $this->load->library('Fcm_service');
+        //9/4/26 fin
+        
         $usuario_id = (int)$this->session->userdata('id_usuario');
         if ($usuario_id <= 0) {
             echo "No autenticado";
