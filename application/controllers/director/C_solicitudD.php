@@ -97,6 +97,8 @@ class C_solicitudD extends CI_Controller
 
         $ok = $this->M_solicitudD->actualizar_estado($id_solicitud, $director_id, $estado);
 
+
+        /* ---- 9-4-26 Inicio poniendo en comentario 
         if ($ok) {
             $this->load->model('M_push');
             $this->load->library('Fcm_service');
@@ -120,7 +122,35 @@ class C_solicitudD extends CI_Controller
                 );
             }
         }
+        ---- 9-4-26 FIN poniendo en comentario  */
+        if ($ok) {
+            try {
+                $this->load->model('M_push');
+                $this->load->library('Fcm_service');
 
+                $profesor_id = $this->M_push->get_profesor_id_by_solicitud($id_solicitud);
+
+                if ($profesor_id > 0) {
+                    $map = [
+                        'EN_REVISION' => 'Tu solicitud está en revisión.',
+                        'ACEPTADO'    => 'Tu solicitud fue aceptada.',
+                        'RECHAZADO'   => 'Tu solicitud fue rechazada.',
+                        'PENDIENTE'   => 'Tu solicitud volvió a pendiente.'
+                    ];
+
+                    $this->fcm_service->send_to_user(
+                        (int)$profesor_id,
+                        'Estado de solicitud',
+                        $map[$estado] ?? ('Estado actualizado: ' . $estado),
+                        'SOLICITUD_ESTADO',
+                        (int)$id_solicitud
+                    );
+                }
+            } catch (Throwable $e) {
+                log_message('error', 'Error push director ajax_actualizar_estado: ' . $e->getMessage());
+            }
+        }
+        
         echo json_encode([
             'status'  => (bool)$ok,
             'message' => $ok ? 'Estado actualizado' : 'No se pudo actualizar'
