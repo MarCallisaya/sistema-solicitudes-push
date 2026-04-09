@@ -58,8 +58,8 @@ class C_solicitudP extends CI_Controller
             //$acciones = $btn_ver . ' ' . $btn_editar;
             $acciones = '
                 <div class="d-flex align-items-center gap-1" style="white-space:nowrap;">
-                    '.$btn_ver.'
-                    '.$btn_editar.'
+                    ' . $btn_ver . '
+                    ' . $btn_editar . '
                 </div>
             ';
 
@@ -190,7 +190,7 @@ class C_solicitudP extends CI_Controller
 
             $data_documento = [
                 'archivo' => $ruta_web,
-                'tipo_archivo' => $up['file_ext'], 
+                'tipo_archivo' => $up['file_ext'],
                 'descripcion' => 'Adjunto de solicitud',
                 'fecha_registro' => date('Y-m-d H:i:s'),
                 'fecha_actualizacion' => date('Y-m-d H:i:s'),
@@ -204,6 +204,7 @@ class C_solicitudP extends CI_Controller
             return;
         }
 
+        /* ----- 9/4/26 inicio poniendo en comentario push y solicitud -----
         //  Push a Director + Admins 
         $this->load->model('M_push');
         $this->load->library('Fcm_service');
@@ -227,9 +228,42 @@ class C_solicitudP extends CI_Controller
                 (int)$id
             );
         }
+
         /* FIN */
 
-        echo json_encode(['status' => true, 'message' => 'Solicitud registrada correctamente.']);
+        //echo json_encode(['status' => true, 'message' => 'Solicitud registrada correctamente.']);
+        //----- 9/4/26 Fin poniendo en comentario push y solicitud -----
+
+        // Push a Director + Admins   09/4/26
+        try {
+            $this->load->model('M_push');
+            $this->load->library('Fcm_service');
+
+            $admins = $this->M_push->get_admin_ids();
+
+            $destinatarios = array_filter(array_unique(array_merge([$director_id], $admins)));
+
+            $titulo = 'Nueva solicitud';
+            $mensaje = 'Se registró una nueva solicitud. Revisa el sistema.';
+            $tipo_evento = 'SOLICITUD_CREADA';
+
+            foreach ($destinatarios as $uid) {
+                $this->fcm_service->send_to_user(
+                    (int)$uid,
+                    $titulo,
+                    $mensaje,
+                    $tipo_evento,
+                    (int)$id
+                );
+            }
+        } catch (Throwable $e) {
+            log_message('error', 'Error push ajax_crear profesor: ' . $e->getMessage());
+        }
+
+        echo json_encode([
+            'status' => true,
+            'message' => 'Solicitud registrada correctamente.'
+        ]);
     }
 
     // PARA EDITAR LA SOLICITUD
