@@ -10,9 +10,15 @@ RUN apt-get update && apt-get install -y \
 
 RUN a2enmod rewrite
 
+# Instalar Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 WORKDIR /var/www/html
 
 COPY . /var/www/html
+
+# Instalar dependencias PHP
+RUN composer install --no-dev --optimize-autoloader
 
 RUN chown -R www-data:www-data /var/www/html
 
