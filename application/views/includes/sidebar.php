@@ -1,3 +1,9 @@
+ <style>
+.nav-label.first span {
+    color: white !important;
+}
+</style>
+ 
  <!--********************************** Sidebar start***********************************-->
  <div class="quixnav">
      <div class="quixnav-scroll">

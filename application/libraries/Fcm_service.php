@@ -117,7 +117,7 @@ class Fcm_service
     ) {
         $this->CI->load->model('M_push');
 
-        // 1) Obtener tokens activos
+        // 1 Obtener tokens activos
         $tokens = $this->CI->M_push->get_tokens_activos($usuario_id);
 
         if (!$tokens || count($tokens) === 0) {
@@ -135,7 +135,7 @@ class Fcm_service
 
         $exito = false;
 
-        // 2) Enviar a cada token
+        // 2 Enviar a cada token
         foreach ($tokens as $t) {
             $res = $this->send_to_token(
                 $t->token,
@@ -150,14 +150,14 @@ class Fcm_service
             if ($res['ok']) {
                 $exito = true;
             } else {
-                // 3) Si token inválido → desactivar
+                // 3 Si token inválido → desactivar
                 if ($this->es_token_invalido($res['http'], $res['response'])) {
                     $this->CI->M_push->desactivar_token($t->token);
                 }
             }
         }
 
-        // 4) Registrar historial (1 por evento)
+        // 4 - Registrar historial (1 por evento)
         $this->CI->M_push->registrar_historial(
             $usuario_id,
             $titulo,
