@@ -47,13 +47,26 @@ class C_solicitudA extends CI_Controller
 
             $acciones = $btn_estado . ' ' . $btn_obs . ' ' . $btn_del;
 
-            $data[] = [
+            /*$data[] = [
                 $btn_ver,
                 $r->tipo_solicitud,
                 $archivo_html,
                 $r->profesor_nombre,
                 $r->estado_actual,
                 $r->fecha_registro,
+                $r->observaciones ?? '',
+                $acciones
+            ];*/
+            $data[] = [
+                $btn_ver,
+                $r->tipo_solicitud,
+                $archivo_html,
+                $r->profesor_nombre,
+                $r->estado_actual,
+                [
+                    'display' => $r->fecha_registro,
+                    'sort'    => $r->fecha_orden
+                ],
                 $r->observaciones ?? '',
                 $acciones
             ];

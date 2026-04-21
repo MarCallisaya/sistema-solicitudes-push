@@ -146,7 +146,7 @@
                         </div>
 
                         <div class="table-responsive">
-<!-- <table id="datatable_admin" class="display w-100">-->
+                            <!-- <table id="datatable_admin" class="display w-100">-->
                             <table id="datatable_admin" class="display" style="min-width: 845px">
                                 <thead>
                                     <tr>
@@ -321,7 +321,7 @@
 
 
         // Listar 
-        if (!$.fn.dataTable.isDataTable('#datatable_admin')) {
+        /*if (!$.fn.dataTable.isDataTable('#datatable_admin')) {
             $('#datatable_admin').DataTable({
                 ajax: {
                     url: BASE_URL + "administrador/C_solicitudA/ajax_listar",
@@ -341,6 +341,40 @@
                         return badgeEstado(estado);
                     }
                 }]
+            });
+
+            cargarResumenAdmin();
+        }*/
+        // Listar 
+        if (!$.fn.dataTable.isDataTable('#datatable_admin')) {
+            $('#datatable_admin').DataTable({
+                ajax: {
+                    url: BASE_URL + "administrador/C_solicitudA/ajax_listar",
+                    type: "GET",
+                    dataSrc: "data"
+                },
+                order: [
+                    [5, 'desc']
+                ],
+                responsive: true,
+                columnDefs: [{
+                        targets: 4,
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            var estado = (row && row.estado) ? row.estado : data;
+                            return badgeEstado(estado);
+                        }
+                    },
+                    {
+                        targets: 5,
+                        render: function(data, type, row) {
+                            if (type === 'sort' || type === 'type') {
+                                return data.sort;
+                            }
+                            return data.display;
+                        }
+                    }
+                ]
             });
 
             cargarResumenAdmin();

@@ -51,13 +51,26 @@ class C_solicitudD extends CI_Controller
             </div>';
 
 
-            $data[] = [
+            /*$data[] = [
                 $btn_ver,
                 $r->tipo_solicitud,
                 $archivo_html,
                 $r->profesor_nombre,
                 $r->estado_actual,
                 $r->fecha_registro,
+                $r->observaciones ?? '',
+                $acciones
+            ]; */
+            $data[] = [
+                $btn_ver,
+                $r->tipo_solicitud,
+                $archivo_html,
+                $r->profesor_nombre,
+                $r->estado_actual,
+                [
+                    'display' => $r->fecha_registro,
+                    'sort'    => $r->fecha_orden
+                ],
                 $r->observaciones ?? '',
                 $acciones
             ];
@@ -150,7 +163,7 @@ class C_solicitudD extends CI_Controller
                 log_message('error', 'Error push director ajax_actualizar_estado: ' . $e->getMessage());
             }
         }
-        
+
         echo json_encode([
             'status'  => (bool)$ok,
             'message' => $ok ? 'Estado actualizado' : 'No se pudo actualizar'
